@@ -145,6 +145,7 @@ function KnowledgeHubPage() {
                 </div>
               </article>
             </GlassCard>
+            </section>
           );
         })}
       </div>
