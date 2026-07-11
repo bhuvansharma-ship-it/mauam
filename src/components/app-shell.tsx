@@ -1,12 +1,14 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { Bell, Bookmark, CloudSun, Map, Menu, MoonStar, Newspaper, Settings, ShieldAlert, Sun, X } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Bell, Bookmark, CloudSun, LogOut, Map, Menu, MoonStar, Newspaper, Settings, ShieldAlert, Sun, User, X } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useTheme } from "./theme-provider";
 import { LocationSwitcher } from "./location-switcher";
 import { useLocation } from "../lib/locations";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { newsQueryOptions } from "../lib/news-query";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "../lib/utils";
+
 
 const NAV = [
   { to: "/", label: "Dashboard", icon: CloudSun },
