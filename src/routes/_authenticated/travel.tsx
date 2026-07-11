@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowRight, Loader2, MapPin, Navigation, Search, ShieldAlert, ShieldCheck, CloudRain, Wind, Thermometer, Sunrise, Sunset, ArrowLeftRight } from "lucide-react";
+import { ArrowRight, Loader2, MapPin, Navigation, Search, ShieldAlert, ShieldCheck, CloudRain, Wind, Thermometer, Sunrise, ArrowLeftRight } from "lucide-react";
 import { GlassCard } from "../../components/glass-card";
 import { searchCities, useLocation, type GeoSuggestion } from "../../lib/locations";
 import { fetchTravelAdvisory, type TravelAdvisory } from "../../lib/travel.functions";
@@ -300,6 +300,3 @@ function fmtDate(iso: string) {
   const d = new Date(iso);
   return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
 }
-
-// suppress unused import warning
-void Sunset;

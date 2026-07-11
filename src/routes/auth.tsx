@@ -63,9 +63,9 @@ function AuthPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden aurora-bg">
+    <div className="relative min-h-dvh overflow-hidden aurora-bg">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
-      <div className="relative mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-12">
+      <div className="relative mx-auto flex min-h-dvh max-w-md flex-col justify-center px-4 py-12">
         <Link to="/" className="mb-8 flex items-center gap-2 self-center text-lg font-semibold">
           <CloudSun className="h-5 w-5 text-primary" />
           <span className="font-display">Aurora Guardian</span>
