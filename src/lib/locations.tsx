@@ -110,8 +110,10 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     staleTime: 60_000,
   });
 
-  const locations: SavedLocation[] =
-    locationsQ.data && locationsQ.data.length > 0 ? locationsQ.data : [FALLBACK];
+  const locations: SavedLocation[] = useMemo(
+    () => (locationsQ.data && locationsQ.data.length > 0 ? locationsQ.data : [FALLBACK]),
+    [locationsQ.data],
+  );
   const homeId = locations.find((l) => l.is_home)?.id ?? locations[0].id;
   const activeId =
     activeQ.data && locations.some((l) => l.id === activeQ.data)
