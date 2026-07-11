@@ -1,9 +1,13 @@
+import { useMemo } from "react";
 import { GlassCard } from "../glass-card";
 import { WeatherIcon } from "../weather-icons/weather-icon";
-import { hourly } from "../../lib/mock/weather";
+import { hourlyFor } from "../../lib/mock/weather";
 import { formatHour } from "../../lib/format-time";
+import { useLocation } from "../../lib/locations";
 
 export function HourlyForecast() {
+  const { active, refreshTick } = useLocation();
+  const hourly = useMemo(() => hourlyFor(active), [active, refreshTick]);
   const max = Math.max(...hourly.map((h) => h.tempF));
   const min = Math.min(...hourly.map((h) => h.tempF));
   return (

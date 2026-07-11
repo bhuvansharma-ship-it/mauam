@@ -1,18 +1,22 @@
+import { useMemo } from "react";
 import { GlassCard } from "../glass-card";
 import { WeatherIcon } from "../weather-icons/weather-icon";
-import { sevenDay } from "../../lib/mock/weather";
+import { sevenDayFor } from "../../lib/mock/weather";
 import { formatDay } from "../../lib/format-time";
+import { useLocation } from "../../lib/locations";
 
 export function SevenDay() {
+  const { active, refreshTick } = useLocation();
+  const sevenDay = useMemo(() => sevenDayFor(active), [active, refreshTick]);
   const globalMin = Math.min(...sevenDay.map((d) => d.low));
   const globalMax = Math.max(...sevenDay.map((d) => d.high));
-  const range = globalMax - globalMin;
+  const range = Math.max(1, globalMax - globalMin);
   return (
     <GlassCard className="col-span-12 lg:col-span-8">
       <div className="p-5 sm:p-6">
         <div className="mb-4 flex items-baseline justify-between">
           <h3 className="font-display text-lg font-semibold">7-day forecast</h3>
-          <span className="text-xs text-muted-foreground">San Francisco</span>
+          <span className="text-xs text-muted-foreground">{active.name}</span>
         </div>
         <div className="space-y-1">
           {sevenDay.map((d, i) => {

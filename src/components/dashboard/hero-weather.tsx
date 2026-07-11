@@ -1,16 +1,34 @@
-import { Droplets, Eye, Sunrise, Sunset, Wind } from "lucide-react";
+import { Droplets, Eye, RefreshCw, Sunrise, Sunset, Wind } from "lucide-react";
 import { GlassCard } from "../glass-card";
 import { WeatherIcon } from "../weather-icons/weather-icon";
-import { currentWeather } from "../../lib/mock/weather";
+import { weatherFor } from "../../lib/mock/weather";
+import { useLocation } from "../../lib/locations";
+import { useMemo } from "react";
 
 export function HeroWeather() {
-  const w = currentWeather;
+  const { active, refreshTick, refresh } = useLocation();
+  const w = useMemo(() => weatherFor(active), [active, refreshTick]);
   return (
     <GlassCard className="aurora-bg col-span-12 lg:col-span-8 xl:col-span-8" glow="primary">
       <div className="relative flex flex-col gap-6 p-6 sm:p-8">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Now in</div>
+            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+              <span>Now in</span>
+              {active.label && (
+                <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] tracking-wider text-primary">
+                  {active.label}
+                </span>
+              )}
+              <button
+                onClick={refresh}
+                className="ml-1 grid h-6 w-6 place-items-center rounded-full hover:bg-accent/30"
+                aria-label="Refresh"
+                title="Refresh"
+              >
+                <RefreshCw className="h-3 w-3" />
+              </button>
+            </div>
             <div className="font-display text-2xl font-semibold sm:text-3xl">{w.location}</div>
             <div className="text-sm text-muted-foreground">{w.region}</div>
           </div>
