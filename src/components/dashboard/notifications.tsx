@@ -6,6 +6,7 @@ import { useLocation } from "../../lib/locations";
 import { newsQueryOptions } from "../../lib/news-query";
 import { timeAgo } from "../../lib/format-time";
 import type { Article, NewsSeverity } from "../../lib/mock/news";
+import { ReadAloudButton } from "../read-aloud-button";
 
 const SEVERITY_WEIGHT: Record<NewsSeverity, number> = {
   breaking: 4,
@@ -46,9 +47,16 @@ export function Notifications() {
   return (
     <GlassCard className="col-span-12 sm:col-span-6 lg:col-span-4">
       <div className="p-5 sm:p-6">
-        <div className="mb-1 flex items-center gap-2">
-          <Bell className="h-4 w-4" aria-hidden="true" />
-          <h3 className="font-display text-lg font-semibold">Recent notifications</h3>
+        <div className="mb-1 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Bell className="h-4 w-4" aria-hidden="true" />
+            <h3 className="font-display text-lg font-semibold">Recent notifications</h3>
+          </div>
+          {items.length > 0 ? (
+            <ReadAloudButton
+              text={items.slice(0, 5).map((a, i) => `${i + 1}. ${a.headline}.`).join(" ")}
+            />
+          ) : null}
         </div>
         <div className="mb-3 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
           <span className="inline-flex items-center gap-1">

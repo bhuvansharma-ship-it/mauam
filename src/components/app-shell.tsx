@@ -1,6 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Bell, Bookmark, CloudSun, ListChecks, LogOut, Menu, MoonStar, Navigation, Newspaper, Settings, ShieldAlert, Sun, User, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "./theme-provider";
 import { LocationSwitcher } from "./location-switcher";
 import { useLocation } from "../lib/locations";
@@ -11,13 +12,13 @@ import { cn } from "../lib/utils";
 
 
 const NAV = [
-  { to: "/", label: "Dashboard", icon: CloudSun },
-  { to: "/news", label: "News", icon: Newspaper },
-  { to: "/alerts", label: "Alerts", icon: ShieldAlert },
-  { to: "/travel", label: "Travel", icon: Navigation },
-  { to: "/checklist", label: "Checklist", icon: ListChecks },
-  { to: "/bookmarks", label: "Saved", icon: Bookmark },
-  { to: "/settings", label: "Settings", icon: Settings },
+  { to: "/", key: "dashboard", icon: CloudSun },
+  { to: "/news", key: "news", icon: Newspaper },
+  { to: "/alerts", key: "alerts", icon: ShieldAlert },
+  { to: "/travel", key: "travel", icon: Navigation },
+  { to: "/checklist", key: "checklist", icon: ListChecks },
+  { to: "/bookmarks", key: "saved", icon: Bookmark },
+  { to: "/settings", key: "settings", icon: Settings },
 ] as const;
 
 
@@ -25,6 +26,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { resolved, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-dvh">
@@ -54,7 +56,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </Link>
 
           <nav className="ml-6 hidden items-center gap-1 lg:flex" aria-label="Primary">
-            {NAV.map(({ to, label, icon: Icon }) => {
+            {NAV.map(({ to, key, icon: Icon }) => {
               const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
               return (
                 <Link
@@ -69,7 +71,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   )}
                 >
                   <Icon className="h-4 w-4" aria-hidden="true" />
-                  {label}
+                  {t(`nav.${key}`)}
                 </Link>
               );
             })}
@@ -96,7 +98,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         {open && (
           <nav id="mobile-nav" className="border-t border-glass-border/60 px-4 pb-3 pt-2 lg:hidden" aria-label="Mobile primary">
             <div className="grid grid-cols-2 gap-1.5">
-              {NAV.map(({ to, label, icon: Icon }) => {
+              {NAV.map(({ to, key, icon: Icon }) => {
                 const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
                 return (
                   <Link
@@ -110,7 +112,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     )}
                   >
                     <Icon className="h-4 w-4" aria-hidden="true" />
-                    {label}
+                    {t(`nav.${key}`)}
                   </Link>
                 );
               })}
