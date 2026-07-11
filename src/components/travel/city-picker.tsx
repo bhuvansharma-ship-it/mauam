@@ -1,7 +1,14 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Loader2, MapPin } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../ui/command";
 import { searchCities, type GeoSuggestion } from "../../lib/locations";
 
 export type Point = { name: string; region: string; country: string; lat: number; lon: number };
@@ -26,15 +33,26 @@ export function CityPicker({
 
   useEffect(() => {
     const q = query.trim();
-    if (q.length < 2) { setResults([]); setLoading(false); return; }
+    if (q.length < 2) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
     const ctrl = new AbortController();
     setLoading(true);
     const t = window.setTimeout(async () => {
-      try { setResults(await searchCities(q, ctrl.signal)); }
-      catch { setResults([]); }
-      finally { setLoading(false); }
+      try {
+        setResults(await searchCities(q, ctrl.signal));
+      } catch {
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
     }, 250);
-    return () => { ctrl.abort(); window.clearTimeout(t); };
+    return () => {
+      ctrl.abort();
+      window.clearTimeout(t);
+    };
   }, [query]);
 
   return (
@@ -72,12 +90,18 @@ export function CityPicker({
             />
             <CommandList>
               {loading && (
-                <div className="flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground" role="status" aria-live="polite">
+                <div
+                  className="flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground"
+                  role="status"
+                  aria-live="polite"
+                >
                   <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> Searching…
                 </div>
               )}
               {!loading && query.trim().length < 2 && (
-                <div className="px-3 py-2 text-xs text-muted-foreground">Type a city name to search.</div>
+                <div className="px-3 py-2 text-xs text-muted-foreground">
+                  Type a city name to search.
+                </div>
               )}
               {!loading && query.trim().length >= 2 && results.length === 0 && (
                 <CommandEmpty>No matches.</CommandEmpty>
@@ -88,7 +112,11 @@ export function CityPicker({
                     <CommandItem
                       key={`${r.name}-${r.lat}-${r.lon}`}
                       value={`${r.name}-${r.lat}-${r.lon}`}
-                      onSelect={() => { onChange(r); setOpen(false); setQuery(""); }}
+                      onSelect={() => {
+                        onChange(r);
+                        setOpen(false);
+                        setQuery("");
+                      }}
                     >
                       <MapPin className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
                       <span className="min-w-0 flex-1 truncate">

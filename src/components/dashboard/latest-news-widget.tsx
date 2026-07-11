@@ -34,10 +34,18 @@ export function LatestNewsWidget() {
             <Newspaper className="h-4 w-4" />
             <h3 className="font-display text-lg font-semibold">Latest news & emergency updates</h3>
           </div>
-          <Link to="/news" className="flex items-center gap-1 text-xs font-medium text-primary hover:underline">See all news <ArrowRight className="h-3 w-3" /></Link>
+          <Link
+            to="/news"
+            className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+          >
+            See all news <ArrowRight className="h-3 w-3" />
+          </Link>
         </div>
         <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" />{active.name}, {active.country}</span>
+          <span className="inline-flex items-center gap-1">
+            <MapPin className="h-3 w-3" />
+            {active.name}, {active.country}
+          </span>
           <span>·</span>
           <span className="inline-flex items-center gap-1">
             <RefreshCw className={"h-3 w-3 " + (query.isFetching ? "animate-spin" : "")} />
@@ -46,7 +54,18 @@ export function LatestNewsWidget() {
         </div>
         <div className="mb-4 flex flex-wrap gap-1.5">
           {CHIPS.map((c) => (
-            <button key={c} onClick={() => setChip(c)} className={"rounded-full px-3 py-1 text-xs font-medium transition " + (chip === c ? "bg-primary text-primary-foreground" : "border border-glass-border/60 bg-glass hover:bg-accent/20")}>{c}</button>
+            <button
+              key={c}
+              onClick={() => setChip(c)}
+              className={
+                "rounded-full px-3 py-1 text-xs font-medium transition " +
+                (chip === c
+                  ? "bg-primary text-primary-foreground"
+                  : "border border-glass-border/60 bg-glass hover:bg-accent/20")
+              }
+            >
+              {c}
+            </button>
           ))}
         </div>
         {query.isLoading ? (
@@ -62,7 +81,9 @@ export function LatestNewsWidget() {
           <div className="grid gap-3 md:grid-cols-2">
             <NewsCard article={featured} />
             <div className="flex flex-col gap-2">
-              {rest.map((a) => <NewsCardCompact key={a.id} article={a} />)}
+              {rest.map((a) => (
+                <NewsCardCompact key={a.id} article={a} />
+              ))}
             </div>
           </div>
         ) : (

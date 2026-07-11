@@ -110,14 +110,23 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     staleTime: 60_000,
   });
 
-  const locations: SavedLocation[] = locationsQ.data && locationsQ.data.length > 0 ? locationsQ.data : [FALLBACK];
+  const locations: SavedLocation[] =
+    locationsQ.data && locationsQ.data.length > 0 ? locationsQ.data : [FALLBACK];
   const homeId = locations.find((l) => l.is_home)?.id ?? locations[0].id;
-  const activeId = activeQ.data && locations.some((l) => l.id === activeQ.data) ? (activeQ.data as string) : homeId;
-  const active = useMemo(() => locations.find((l) => l.id === activeId) ?? locations[0], [locations, activeId]);
+  const activeId =
+    activeQ.data && locations.some((l) => l.id === activeQ.data)
+      ? (activeQ.data as string)
+      : homeId;
+  const active = useMemo(
+    () => locations.find((l) => l.id === activeId) ?? locations[0],
+    [locations, activeId],
+  );
 
   const setActiveMut = useMutation({
     mutationFn: async (id: string) => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
       const { error } = await supabase
         .from("user_preferences")
@@ -138,7 +147,9 @@ export function LocationProvider({ children }: { children: ReactNode }) {
 
   const addMut = useMutation({
     mutationFn: async (loc: Omit<SavedLocation, "id">) => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not signed in");
       const { data, error } = await supabase
         .from("saved_locations")
@@ -174,7 +185,10 @@ export function LocationProvider({ children }: { children: ReactNode }) {
 
   const renameMut = useMutation({
     mutationFn: async ({ id, label }: { id: string; label: string }) => {
-      const { error } = await supabase.from("saved_locations").update({ label: label.trim() || null }).eq("id", id);
+      const { error } = await supabase
+        .from("saved_locations")
+        .update({ label: label.trim() || null })
+        .eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["saved_locations"] }),
@@ -182,11 +196,20 @@ export function LocationProvider({ children }: { children: ReactNode }) {
 
   const setHomeMut = useMutation({
     mutationFn: async (id: string) => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
       // clear existing home flags then set new
-      await supabase.from("saved_locations").update({ is_home: false }).eq("user_id", user.id).eq("is_home", true);
-      const { error } = await supabase.from("saved_locations").update({ is_home: true }).eq("id", id);
+      await supabase
+        .from("saved_locations")
+        .update({ is_home: false })
+        .eq("user_id", user.id)
+        .eq("is_home", true);
+      const { error } = await supabase
+        .from("saved_locations")
+        .update({ is_home: true })
+        .eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["saved_locations"] }),
@@ -196,18 +219,49 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     mutationFn: async (id: string) => {
       const current = locations.find((l) => l.id === id);
       const next = !(current?.notifications ?? true);
-      const { error } = await supabase.from("saved_locations").update({ notifications: next }).eq("id", id);
+      const { error } = await supabase
+        .from("saved_locations")
+        .update({ notifications: next })
+        .eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["saved_locations"] }),
   });
 
-  const addLocation = useCallback(async (loc: Omit<SavedLocation, "id">) => addMut.mutateAsync(loc), [addMut]);
-  const removeLocation = useCallback(async (id: string) => { await removeMut.mutateAsync(id); }, [removeMut]);
-  const renameLocation = useCallback(async (id: string, label: string) => { await renameMut.mutateAsync({ id, label }); }, [renameMut]);
-  const setHome = useCallback(async (id: string) => { await setHomeMut.mutateAsync(id); }, [setHomeMut]);
-  const toggleNotifications = useCallback(async (id: string) => { await toggleNotifMut.mutateAsync(id); }, [toggleNotifMut]);
-  const setActive = useCallback((id: string) => { setActiveMut.mutate(id); }, [setActiveMut]);
+  const addLocation = useCallback(
+    async (loc: Omit<SavedLocation, "id">) => addMut.mutateAsync(loc),
+    [addMut],
+  );
+  const removeLocation = useCallback(
+    async (id: string) => {
+      await removeMut.mutateAsync(id);
+    },
+    [removeMut],
+  );
+  const renameLocation = useCallback(
+    async (id: string, label: string) => {
+      await renameMut.mutateAsync({ id, label });
+    },
+    [renameMut],
+  );
+  const setHome = useCallback(
+    async (id: string) => {
+      await setHomeMut.mutateAsync(id);
+    },
+    [setHomeMut],
+  );
+  const toggleNotifications = useCallback(
+    async (id: string) => {
+      await toggleNotifMut.mutateAsync(id);
+    },
+    [toggleNotifMut],
+  );
+  const setActive = useCallback(
+    (id: string) => {
+      setActiveMut.mutate(id);
+    },
+    [setActiveMut],
+  );
 
   const detectCurrent = useCallback(async () => {
     setDetectError(null);
@@ -218,7 +272,10 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     setDetecting(true);
     try {
       const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
-        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000, maximumAge: 60000 }),
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          timeout: 10000,
+          maximumAge: 60000,
+        }),
       );
       const { latitude, longitude } = pos.coords;
       let name = "My Location";
@@ -229,13 +286,28 @@ export function LocationProvider({ children }: { children: ReactNode }) {
           `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
         );
         if (res.ok) {
-          const j = (await res.json()) as { city?: string; locality?: string; principalSubdivision?: string; countryName?: string };
+          const j = (await res.json()) as {
+            city?: string;
+            locality?: string;
+            principalSubdivision?: string;
+            countryName?: string;
+          };
           name = j.city || j.locality || name;
           country = j.countryName || "";
           region = [j.principalSubdivision, j.countryName].filter(Boolean).join(", ") || region;
         }
-      } catch { /* ignore */ }
-      await addMut.mutateAsync({ name, region, country, lat: latitude, lon: longitude, label: "Current", notifications: true });
+      } catch {
+        /* ignore */
+      }
+      await addMut.mutateAsync({
+        name,
+        region,
+        country,
+        lat: latitude,
+        lon: longitude,
+        label: "Current",
+        notifications: true,
+      });
     } catch (err) {
       const e = err as GeolocationPositionError | Error;
       const code = (e as GeolocationPositionError).code;
@@ -280,7 +352,13 @@ export function useLocation() {
   return ctx;
 }
 
-export type GeoSuggestion = { name: string; region: string; country: string; lat: number; lon: number };
+export type GeoSuggestion = {
+  name: string;
+  region: string;
+  country: string;
+  lat: number;
+  lon: number;
+};
 
 export async function searchCities(query: string, signal?: AbortSignal): Promise<GeoSuggestion[]> {
   const q = query.trim();
@@ -289,7 +367,14 @@ export async function searchCities(query: string, signal?: AbortSignal): Promise
   const res = await fetch(url, { signal });
   if (!res.ok) return [];
   const j = (await res.json()) as {
-    results?: Array<{ name: string; admin1?: string; admin2?: string; country?: string; latitude: number; longitude: number }>;
+    results?: Array<{
+      name: string;
+      admin1?: string;
+      admin2?: string;
+      country?: string;
+      latitude: number;
+      longitude: number;
+    }>;
   };
   return (j.results ?? []).map((r) => ({
     name: r.name,

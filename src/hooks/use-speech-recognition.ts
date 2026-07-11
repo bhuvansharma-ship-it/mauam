@@ -27,7 +27,11 @@ export interface UseSpeechRecognitionOptions {
   onUnsupported?: () => void;
 }
 
-export function useSpeechRecognition({ onTranscript, onFinal, onUnsupported }: UseSpeechRecognitionOptions = {}) {
+export function useSpeechRecognition({
+  onTranscript,
+  onFinal,
+  onUnsupported,
+}: UseSpeechRecognitionOptions = {}) {
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef<InstanceType<SpeechRecognitionCtor> | null>(null);
 

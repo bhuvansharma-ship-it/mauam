@@ -18,8 +18,25 @@ export function PreparednessScore() {
         </div>
         <div className="relative h-40 w-40">
           <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
-            <circle cx="60" cy="60" r={r} stroke="var(--color-muted)" strokeWidth="10" fill="none" opacity="0.4" />
-            <circle cx="60" cy="60" r={r} stroke="url(#prep-grad)" strokeWidth="10" fill="none" strokeLinecap="round" strokeDasharray={`${dash} ${c}`} />
+            <circle
+              cx="60"
+              cy="60"
+              r={r}
+              stroke="var(--color-muted)"
+              strokeWidth="10"
+              fill="none"
+              opacity="0.4"
+            />
+            <circle
+              cx="60"
+              cy="60"
+              r={r}
+              stroke="url(#prep-grad)"
+              strokeWidth="10"
+              fill="none"
+              strokeLinecap="round"
+              strokeDasharray={`${dash} ${c}`}
+            />
             <defs>
               <linearGradient id="prep-grad" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stopColor="var(--color-weather-safe)" />
@@ -33,8 +50,12 @@ export function PreparednessScore() {
           </div>
         </div>
         <div className="text-center text-sm">
-          <div className="font-medium">{pct >= 80 ? "Well prepared" : pct >= 50 ? "Getting there" : "Needs attention"}</div>
-          <div className="text-xs text-muted-foreground">{done} of {items.length} tasks complete</div>
+          <div className="font-medium">
+            {pct >= 80 ? "Well prepared" : pct >= 50 ? "Getting there" : "Needs attention"}
+          </div>
+          <div className="text-xs text-muted-foreground">
+            {done} of {items.length} tasks complete
+          </div>
         </div>
       </div>
     </GlassCard>

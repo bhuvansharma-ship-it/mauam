@@ -54,7 +54,10 @@ export function Notifications() {
           </div>
           {items.length > 0 ? (
             <ReadAloudButton
-              text={items.slice(0, 5).map((a, i) => `${i + 1}. ${a.headline}.`).join(" ")}
+              text={items
+                .slice(0, 5)
+                .map((a, i) => `${i + 1}. ${a.headline}.`)
+                .join(" ")}
             />
           ) : null}
         </div>
@@ -66,7 +69,10 @@ export function Notifications() {
           </span>
           <span aria-hidden="true">·</span>
           <span className="inline-flex items-center gap-1">
-            <RefreshCw className={"h-3 w-3 " + (query.isFetching ? "animate-spin" : "")} aria-hidden="true" />
+            <RefreshCw
+              className={"h-3 w-3 " + (query.isFetching ? "animate-spin" : "")}
+              aria-hidden="true"
+            />
             {query.isFetching ? "Updating…" : "From Google News"}
           </span>
         </div>
@@ -88,7 +94,11 @@ export function Notifications() {
               const Icon = iconFor[kind];
               const content = (
                 <>
-                  <div className={"mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-xl " + toneFor[kind]}>
+                  <div
+                    className={
+                      "mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-xl " + toneFor[kind]
+                    }
+                  >
                     <Icon className="h-4 w-4" aria-hidden="true" />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -97,7 +107,9 @@ export function Notifications() {
                       <span className="truncate">{a.source.name}</span>
                       <span aria-hidden="true">·</span>
                       <span>{timeAgo(a.publishedAt)}</span>
-                      {a.url ? <ExternalLink className="h-3 w-3 shrink-0" aria-hidden="true" /> : null}
+                      {a.url ? (
+                        <ExternalLink className="h-3 w-3 shrink-0" aria-hidden="true" />
+                      ) : null}
                     </div>
                   </div>
                 </>

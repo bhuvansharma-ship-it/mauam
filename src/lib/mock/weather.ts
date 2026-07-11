@@ -18,7 +18,13 @@ export type CurrentWeather = {
 };
 
 export type HourlyPoint = { time: string; tempF: number; condition: Condition; precip: number };
-export type DayForecast = { date: string; condition: Condition; high: number; low: number; precip: number };
+export type DayForecast = {
+  date: string;
+  condition: Condition;
+  high: number;
+  low: number;
+  precip: number;
+};
 
 type Seed = { name: string; region: string; lat: number; lon: number };
 
@@ -93,7 +99,12 @@ export function hourlyFor(loc: Seed): HourlyPoint[] {
       time: d.toISOString(),
       tempF: t,
       condition: cond,
-      precip: cond === "rain" || cond === "storm" ? 55 + ((h + i) % 40) : cond === "cloudy" ? 15 + (i % 10) : 5 + (i % 5),
+      precip:
+        cond === "rain" || cond === "storm"
+          ? 55 + ((h + i) % 40)
+          : cond === "cloudy"
+            ? 15 + (i % 10)
+            : 5 + (i % 5),
     };
   });
 }
@@ -110,14 +121,23 @@ export function sevenDayFor(loc: Seed): DayForecast[] {
       condition: cond,
       high,
       low,
-      precip: cond === "rain" || cond === "storm" ? 70 + ((h + i) % 25) : cond === "cloudy" ? 25 + (i * 5) % 20 : 5 + (i * 3) % 10,
+      precip:
+        cond === "rain" || cond === "storm"
+          ? 70 + ((h + i) % 25)
+          : cond === "cloudy"
+            ? 25 + ((i * 5) % 20)
+            : 5 + ((i * 3) % 10),
     };
   });
 }
 
-
 // Back-compat default exports (used by any not-yet-migrated component/mocks).
-const DEFAULT_SEED: Seed = { name: "Bengaluru", region: "Karnataka, India", lat: 12.97, lon: 77.59 };
+const DEFAULT_SEED: Seed = {
+  name: "Bengaluru",
+  region: "Karnataka, India",
+  lat: 12.97,
+  lon: 77.59,
+};
 export const currentWeather: CurrentWeather = weatherFor(DEFAULT_SEED);
 export const hourly: HourlyPoint[] = hourlyFor(DEFAULT_SEED);
 export const sevenDay: DayForecast[] = sevenDayFor(DEFAULT_SEED);
