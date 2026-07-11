@@ -5,6 +5,7 @@ import { weatherFor } from "../../lib/mock/weather";
 import { useLocation } from "../../lib/locations";
 import { useMemo } from "react";
 import { ReadAloudButton } from "../read-aloud-button";
+import { WeatherBackdrop } from "./weather-backdrop";
 
 export function HeroWeather() {
   const { active, refreshTick, refresh } = useLocation();
@@ -12,7 +13,9 @@ export function HeroWeather() {
   return (
     <GlassCard className="mausam-bg col-span-12 lg:col-span-8 xl:col-span-8" glow="primary">
       <div className="relative flex flex-col gap-6 p-6 sm:p-8">
-        <div className="flex items-start justify-between gap-4">
+        <WeatherBackdrop condition={w.conditionLabel ?? w.condition} tempC={w.tempF} />
+        <div className="relative z-10 flex items-start justify-between gap-4">
+
           <div className="min-w-0">
             <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
               <span>Now in</span>
