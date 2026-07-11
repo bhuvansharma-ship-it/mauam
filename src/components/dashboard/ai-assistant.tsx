@@ -2,8 +2,12 @@ import { MapPin, Mic, MicOff, Send, Sparkles, Square } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
+import { toast } from "sonner";
 import { GlassCard } from "../glass-card";
 import { useLocation } from "../../lib/locations";
+import { useSpeechRecognition } from "../../hooks/use-speech-recognition";
+import { useSpeakOnce } from "../../hooks/use-speech-synthesis";
+import { ChatBubble, messageText } from "./chat-bubble";
 
 const SUGGESTIONS = [
   "Is it safe to travel today?",
@@ -12,23 +16,9 @@ const SUGGESTIONS = [
   "First-aid steps for heat exhaustion",
 ];
 
-// Minimal Web Speech API typing
-type SpeechRecognitionCtor = new () => {
-  lang: string;
-  interimResults: boolean;
-  continuous: boolean;
-  onresult: (e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void;
-  onend: () => void;
-  onerror: (e: unknown) => void;
-  start: () => void;
-  stop: () => void;
-};
-
 export function AIAssistant() {
   const [input, setInput] = useState("");
-  const [listening, setListening] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const recognitionRef = useRef<InstanceType<SpeechRecognitionCtor> | null>(null);
   const { active, locations } = useLocation();
 
   const initial = useMemo<UIMessage[]>(
@@ -94,66 +84,22 @@ export function AIAssistant() {
     setInput("");
   };
 
-  const toggleMic = () => {
-    if (typeof window === "undefined") return;
-    const w = window as unknown as {
-      SpeechRecognition?: SpeechRecognitionCtor;
-      webkitSpeechRecognition?: SpeechRecognitionCtor;
-    };
-    const Ctor = w.SpeechRecognition || w.webkitSpeechRecognition;
-    if (!Ctor) {
-      alert("Voice input isn't supported in this browser. Try Chrome or Edge.");
-      return;
-    }
-    if (listening && recognitionRef.current) {
-      recognitionRef.current.stop();
-      return;
-    }
-    const rec = new Ctor();
-    rec.lang = navigator.language || "en-US";
-    rec.interimResults = true;
-    rec.continuous = false;
-    let finalText = "";
-    rec.onresult = (e) => {
-      let interim = "";
-      for (let i = 0; i < e.results.length; i++) {
-        const chunk = e.results[i][0].transcript;
-        if (i === e.results.length - 1) interim = chunk;
-        else finalText += chunk;
-      }
-      setInput((finalText + interim).trim());
-    };
-    rec.onend = () => {
-      setListening(false);
-      const spoken = (finalText || input).trim();
-      if (spoken) send(spoken);
-    };
-    rec.onerror = () => setListening(false);
-    recognitionRef.current = rec;
-    setListening(true);
-    rec.start();
-  };
+  const { listening, toggle: toggleMic } = useSpeechRecognition({
+    onTranscript: setInput,
+    onFinal: send,
+    onUnsupported: () =>
+      toast.error("Voice input isn't supported in this browser.", {
+        description: "Try Chrome or Edge for voice input.",
+      }),
+  });
 
   // Speak the latest assistant message when it finishes streaming.
-  const lastAssistantId = [...messages].reverse().find((m) => m.role === "assistant")?.id;
-  const spokenIdRef = useRef<string | null>(null);
-  useEffect(() => {
-    if (isLoading || !lastAssistantId || spokenIdRef.current === lastAssistantId) return;
-    if (lastAssistantId === "welcome") {
-      spokenIdRef.current = lastAssistantId;
-      return;
-    }
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    const msg = messages.find((m) => m.id === lastAssistantId);
-    if (!msg) return;
-    const text = msg.parts.map((p) => (p.type === "text" ? p.text : "")).join(" ").trim();
-    if (!text) return;
-    spokenIdRef.current = lastAssistantId;
-    const utter = new SpeechSynthesisUtterance(text.slice(0, 500));
-    utter.rate = 1.02;
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utter);
-  }, [isLoading, lastAssistantId, messages]);
+  const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant");
+  const shouldSpeak = !isLoading && lastAssistant?.id !== "welcome";
+  useSpeakOnce({
+    id: shouldSpeak ? lastAssistant?.id : null,
+    text: lastAssistant ? messageText(lastAssistant) : "",
+  });
 
   return (
     <GlassCard className="col-span-12 lg:col-span-4" glow="primary">
@@ -177,21 +123,9 @@ export function AIAssistant() {
         </div>
 
         <div ref={scrollRef} className="flex-1 space-y-2 overflow-y-auto pr-1 min-h-[160px] max-h-[260px]">
-          {messages.map((m) => {
-            const text = m.parts.map((p) => (p.type === "text" ? p.text : "")).join("");
-            return (
-              <div
-                key={m.id}
-                className={
-                  m.role === "user"
-                    ? "ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-primary/20 px-3 py-2 text-sm whitespace-pre-wrap"
-                    : "mr-auto max-w-[85%] rounded-2xl rounded-tl-sm bg-muted/60 px-3 py-2 text-sm whitespace-pre-wrap"
-                }
-              >
-                {text || (m.role === "assistant" && isLoading ? "…" : "")}
-              </div>
-            );
-          })}
+          {messages.map((m) => (
+            <ChatBubble key={m.id} message={m} pending={isLoading} />
+          ))}
           {error && (
             <div className="mr-auto max-w-[90%] rounded-2xl bg-destructive/15 px-3 py-2 text-xs text-destructive">
               {error.message || "Something went wrong. Please try again."}
