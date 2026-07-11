@@ -29,6 +29,7 @@ function Dashboard() {
     <div className="grid grid-cols-12 gap-4 sm:gap-5">
       <AlertBanner />
       <HeroWeather />
+      <Suspense fallback={<WidgetFallback />}><KnowledgeHub /></Suspense>
       <LatestNewsWidget />
       <PreparednessScore />
       <HourlyForecast />
@@ -38,8 +39,8 @@ function Dashboard() {
       <Suspense fallback={<WidgetFallback />}><NearbyShelters /></Suspense>
       <Suspense fallback={<WidgetFallback />}><EmergencyContacts /></Suspense>
       <Suspense fallback={<WidgetFallback />}><Notifications /></Suspense>
-      <Suspense fallback={<WidgetFallback />}><KnowledgeHub /></Suspense>
       <Suspense fallback={<WidgetFallback />}><SevenDay /></Suspense>
+
     </div>
   );
 }
