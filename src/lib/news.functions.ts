@@ -135,7 +135,7 @@ export const fetchNews = createServerFn({ method: "POST" })
 
     try {
       const res = await fetch(url, {
-        headers: { "user-agent": "Mozilla/5.0 (compatible; AuroraGuardian/1.0)" },
+        headers: { "user-agent": "Mozilla/5.0 (compatible; Mausam/1.0)" },
       });
       if (!res.ok) return [];
       const xml = await res.text();

@@ -86,7 +86,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Real-time weather, emergency preparedness, and verified public-safety news in one calm, beautiful dashboard.",
       },
-      { name: "author", content: "Aurora Guardian" },
+      { name: "author", content: "Mausam" },
       { property: "og:title", content: "Mauasam— Weather, Emergency & News" },
       {
         property: "og:description",

@@ -114,7 +114,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <main className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:py-8">{children}</main>
 
       <footer className="mx-auto max-w-[1440px] px-4 py-8 text-center text-xs text-muted-foreground sm:px-6">
-        Aurora Guardian · Sample data for demonstration. Always follow official guidance from local authorities during emergencies.
+        Mausam · Sample data for demonstration. Always follow official guidance from local authorities during emergencies.
       </footer>
     </div>
   );

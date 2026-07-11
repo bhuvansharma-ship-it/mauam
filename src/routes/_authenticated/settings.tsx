@@ -6,7 +6,7 @@ import { MapPin, MoonStar, Sun, Monitor, Bell } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — Aurora Guardian" },
+      { title: "Settings — Mausam" },
       { name: "description", content: "Manage location, theme, and notification preferences." },
     ],
   }),
