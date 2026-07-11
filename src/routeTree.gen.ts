@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AuthenticatedTravelRouteImport } from './routes/_authenticated/travel'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedNewsRouteImport } from './routes/_authenticated/news'
 import { Route as AuthenticatedMapRouteImport } from './routes/_authenticated/map'
@@ -40,6 +41,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedTravelRoute = AuthenticatedTravelRouteImport.update({
+  id: '/travel',
+  path: '/travel',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/map': typeof AuthenticatedMapRoute
   '/news': typeof AuthenticatedNewsRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRoute
+  '/travel': typeof AuthenticatedTravelRoute
   '/api/chat': typeof ApiChatRoute
   '/news/$slug': typeof AuthenticatedNewsSlugRoute
 }
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/map': typeof AuthenticatedMapRoute
   '/news': typeof AuthenticatedNewsRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRoute
+  '/travel': typeof AuthenticatedTravelRoute
   '/api/chat': typeof ApiChatRoute
   '/': typeof AuthenticatedIndexRoute
   '/news/$slug': typeof AuthenticatedNewsSlugRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/_authenticated/map': typeof AuthenticatedMapRoute
   '/_authenticated/news': typeof AuthenticatedNewsRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/travel': typeof AuthenticatedTravelRoute
   '/api/chat': typeof ApiChatRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/news/$slug': typeof AuthenticatedNewsSlugRoute
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/map'
     | '/news'
     | '/settings'
+    | '/travel'
     | '/api/chat'
     | '/news/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/map'
     | '/news'
     | '/settings'
+    | '/travel'
     | '/api/chat'
     | '/'
     | '/news/$slug'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/_authenticated/map'
     | '/_authenticated/news'
     | '/_authenticated/settings'
+    | '/_authenticated/travel'
     | '/api/chat'
     | '/_authenticated/'
     | '/_authenticated/news/$slug'
@@ -201,6 +213,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/chat'
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/travel': {
+      id: '/_authenticated/travel'
+      path: '/travel'
+      fullPath: '/travel'
+      preLoaderRoute: typeof AuthenticatedTravelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
@@ -280,6 +299,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMapRoute: typeof AuthenticatedMapRoute
   AuthenticatedNewsRoute: typeof AuthenticatedNewsRouteWithChildren
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedTravelRoute: typeof AuthenticatedTravelRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
@@ -291,6 +311,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMapRoute: AuthenticatedMapRoute,
   AuthenticatedNewsRoute: AuthenticatedNewsRouteWithChildren,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedTravelRoute: AuthenticatedTravelRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 
