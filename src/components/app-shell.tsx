@@ -28,30 +28,39 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-dvh">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        Skip to main content
+      </a>
       <header className="sticky top-0 z-40 border-b border-glass-border/60 bg-background/60 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-4 sm:px-6">
           <button
             onClick={() => setOpen((v) => !v)}
-            className="grid h-10 w-10 place-items-center rounded-full hover:bg-accent/30 lg:hidden"
-            aria-label="Toggle nav"
+            className="grid h-11 w-11 place-items-center rounded-full hover:bg-accent/30 lg:hidden"
+            aria-label={open ? "Close navigation" : "Open navigation"}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
           >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
 
-          <Link to="/" className="flex items-center gap-2">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg">
+          <Link to="/" className="flex items-center gap-2" aria-label="Mausam home">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg" aria-hidden="true">
               <CloudSun className="h-5 w-5 text-primary-foreground" />
             </div>
             <div className="font-display text-lg font-bold tracking-tight">Mausam</div>
           </Link>
 
-          <nav className="ml-6 hidden items-center gap-1 lg:flex">
+          <nav className="ml-6 hidden items-center gap-1 lg:flex" aria-label="Primary">
             {NAV.map(({ to, label, icon: Icon }) => {
               const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
               return (
                 <Link
                   key={to}
                   to={to}
+                  aria-current={active ? "page" : undefined}
                   className={cn(
                     "flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-medium transition",
                     active
@@ -59,7 +68,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                       : "text-muted-foreground hover:bg-accent/20 hover:text-foreground",
                   )}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4" aria-hidden="true" />
                   {label}
                 </Link>
               );
@@ -70,14 +79,14 @@ export function AppShell({ children }: { children: ReactNode }) {
             <LocationSwitcher />
             <button
               onClick={() => setTheme(resolved === "dark" ? "light" : "dark")}
-              className="grid h-10 w-10 place-items-center rounded-full border border-glass-border/70 bg-glass transition hover:bg-accent/20"
-              aria-label="Toggle theme"
+              className="grid h-11 w-11 place-items-center rounded-full border border-glass-border/70 bg-glass transition hover:bg-accent/20"
+              aria-label={`Switch to ${resolved === "dark" ? "light" : "dark"} theme`}
             >
-              {resolved === "dark" ? <Sun className="h-4 w-4" /> : <MoonStar className="h-4 w-4" />}
+              {resolved === "dark" ? <Sun className="h-4 w-4" aria-hidden="true" /> : <MoonStar className="h-4 w-4" aria-hidden="true" />}
             </button>
-            <button className="relative grid h-10 w-10 place-items-center rounded-full border border-glass-border/70 bg-glass transition hover:bg-accent/20" aria-label="Notifications">
-              <Bell className="h-4 w-4" />
-              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-weather-critical animate-pulse-alert" />
+            <button className="relative grid h-11 w-11 place-items-center rounded-full border border-glass-border/70 bg-glass transition hover:bg-accent/20" aria-label="Notifications (1 new)">
+              <Bell className="h-4 w-4" aria-hidden="true" />
+              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-weather-critical animate-pulse-alert" aria-hidden="true" />
             </button>
             <UserMenu />
           </div>
@@ -85,7 +94,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
 
         {open && (
-          <nav className="border-t border-glass-border/60 px-4 pb-3 pt-2 lg:hidden">
+          <nav id="mobile-nav" className="border-t border-glass-border/60 px-4 pb-3 pt-2 lg:hidden" aria-label="Mobile primary">
             <div className="grid grid-cols-2 gap-1.5">
               {NAV.map(({ to, label, icon: Icon }) => {
                 const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
@@ -94,12 +103,13 @@ export function AppShell({ children }: { children: ReactNode }) {
                     key={to}
                     to={to}
                     onClick={() => setOpen(false)}
+                    aria-current={active ? "page" : undefined}
                     className={cn(
-                      "flex items-center gap-2 rounded-2xl px-3 py-2.5 text-sm font-medium",
+                      "flex min-h-11 items-center gap-2 rounded-2xl px-3 py-2.5 text-sm font-medium",
                       active ? "bg-primary/15" : "hover:bg-accent/20",
                     )}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-4 w-4" aria-hidden="true" />
                     {label}
                   </Link>
                 );
@@ -111,7 +121,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <BreakingTicker />
       </header>
 
-      <main className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:py-8">{children}</main>
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:py-8">{children}</main>
 
       <footer className="mx-auto max-w-[1440px] px-4 py-8 text-center text-xs text-muted-foreground sm:px-6">
         Mausam · Sample data for demonstration. Always follow official guidance from local authorities during emergencies.
@@ -126,10 +136,15 @@ function BreakingTicker() {
   const items = (query.data ?? []).filter((n) => n.severity === "breaking" || n.severity === "critical").slice(0, 8);
   if (!items.length) return null;
   return (
-    <div className="overflow-hidden border-t border-glass-border/60 bg-gradient-to-r from-weather-critical/10 via-transparent to-weather-storm/10">
+    <div
+      className="overflow-hidden border-t border-glass-border/60 bg-gradient-to-r from-weather-critical/10 via-transparent to-weather-storm/10"
+      role="region"
+      aria-label="Breaking news"
+      aria-live="polite"
+    >
       <div className="mx-auto flex max-w-[1440px] items-center gap-3 px-4 py-2 sm:px-6">
         <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-weather-critical px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white animate-pulse-alert">
-          <ShieldAlert className="h-3 w-3" /> Breaking
+          <ShieldAlert className="h-3 w-3" aria-hidden="true" /> Breaking
         </span>
         <div className="relative flex-1 overflow-hidden">
           <div className="flex whitespace-nowrap animate-ticker gap-10">
