@@ -8,7 +8,6 @@ import { Checklist } from "../../components/dashboard/checklist";
 import { AIAssistant } from "../../components/dashboard/ai-assistant";
 import { TravelAdvisory } from "../../components/dashboard/travel-advisory";
 import { NearbyShelters } from "../../components/dashboard/nearby-shelters";
-import { IncidentMap } from "../../components/dashboard/incident-map";
 import { EmergencyContacts } from "../../components/dashboard/emergency-contacts";
 import { Notifications } from "../../components/dashboard/notifications";
 import { LatestNewsWidget } from "../../components/dashboard/latest-news-widget";
@@ -30,7 +29,6 @@ function Dashboard() {
       <Checklist />
       <LatestNewsWidget />
       <TravelAdvisory />
-      <IncidentMap />
       <NearbyShelters />
       <EmergencyContacts />
       <Notifications />
