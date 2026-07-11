@@ -77,8 +77,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Bell className="h-4 w-4" />
               <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-weather-critical animate-pulse-alert" />
             </button>
+            <UserMenu />
           </div>
         </div>
+
 
         {open && (
           <nav className="border-t border-glass-border/60 px-4 pb-3 pt-2 lg:hidden">
