@@ -130,6 +130,18 @@ function SettingsPage() {
           </div>
         </div>
       </GlassCard>
+
+      <GlassCard>
+        <div className="p-6">
+          <div className="mb-3 flex items-center gap-2"><LogOut className="h-4 w-4" /><h3 className="font-display text-lg font-semibold">Account</h3></div>
+          <button
+            onClick={signOut}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-news-breaking/50 px-5 py-3 text-sm font-semibold text-news-breaking transition hover:bg-news-breaking/10"
+          >
+            <LogOut className="h-4 w-4" /> Sign out
+          </button>
+        </div>
+      </GlassCard>
     </div>
   );
 }
