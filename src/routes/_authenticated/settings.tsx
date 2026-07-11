@@ -1,10 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "@tanstack/react-query";
 import { GlassCard } from "../../components/glass-card";
 import { useTheme } from "../../components/theme-provider";
-import { MapPin, MoonStar, Sun, Monitor, Bell, Home, Languages } from "lucide-react";
+import { MapPin, MoonStar, Sun, Monitor, Bell, Home, Languages, LogOut } from "lucide-react";
 import { useLocation } from "../../lib/locations";
 import { LANGUAGES, setLanguage, type LangCode } from "../../lib/i18n";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
@@ -20,9 +22,19 @@ function SettingsPage() {
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
   const { active, homeId, setHome, locations } = useLocation();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const displayName = [active.label, active.name, active.region].filter(Boolean).join(" · ");
   const isHome = active.id === homeId;
   const currentLang = (i18n.language as LangCode) || "en";
+
+  const signOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  };
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
@@ -116,6 +128,18 @@ function SettingsPage() {
               </label>
             ))}
           </div>
+        </div>
+      </GlassCard>
+
+      <GlassCard>
+        <div className="p-6">
+          <div className="mb-3 flex items-center gap-2"><LogOut className="h-4 w-4" /><h3 className="font-display text-lg font-semibold">Account</h3></div>
+          <button
+            onClick={signOut}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-news-breaking/50 px-5 py-3 text-sm font-semibold text-news-breaking transition hover:bg-news-breaking/10"
+          >
+            <LogOut className="h-4 w-4" /> Sign out
+          </button>
         </div>
       </GlassCard>
     </div>
