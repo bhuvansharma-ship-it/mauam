@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { GlassCard } from "../../components/glass-card";
 import { useTheme } from "../../components/theme-provider";
-import { MapPin, MoonStar, Sun, Monitor, Bell } from "lucide-react";
+import { MapPin, MoonStar, Sun, Monitor, Bell, Home } from "lucide-react";
+import { useLocation } from "../../lib/locations";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
@@ -15,6 +16,9 @@ export const Route = createFileRoute("/_authenticated/settings")({
 
 function SettingsPage() {
   const { theme, setTheme } = useTheme();
+  const { active, homeId, setHome, locations } = useLocation();
+  const displayName = [active.label, active.name, active.region].filter(Boolean).join(" · ");
+  const isHome = active.id === homeId;
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
@@ -24,7 +28,33 @@ function SettingsPage() {
       <GlassCard>
         <div className="p-6">
           <div className="mb-3 flex items-center gap-2"><MapPin className="h-4 w-4" /><h3 className="font-display text-lg font-semibold">Location</h3></div>
-          <input defaultValue="San Francisco, CA" className="w-full rounded-2xl border border-glass-border/60 bg-glass px-4 py-2.5 text-sm outline-none" />
+          <div className="rounded-2xl border border-glass-border/60 bg-glass px-4 py-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="truncate text-sm font-semibold">{displayName}</div>
+                <div className="mt-0.5 text-xs text-muted-foreground">
+                  {active.country} · {active.lat.toFixed(3)}, {active.lon.toFixed(3)}
+                </div>
+              </div>
+              {isHome ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 text-[11px] font-medium text-primary">
+                  <Home className="h-3 w-3" /> Home
+                </span>
+              ) : (
+                <button
+                  onClick={() => setHome(active.id).catch(() => {})}
+                  className="rounded-full border border-glass-border/60 px-3 py-1 text-[11px] font-medium hover:bg-accent/20"
+                >
+                  Set as home
+                </button>
+              )}
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            This mirrors the location selected on your dashboard.{" "}
+            <Link to="/" className="text-primary hover:underline">Change it there</Link>
+            {locations.length > 1 ? ` (${locations.length} saved).` : "."}
+          </p>
         </div>
       </GlassCard>
 
