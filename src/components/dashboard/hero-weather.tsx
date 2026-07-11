@@ -5,6 +5,7 @@ import { weatherFor } from "../../lib/mock/weather";
 import { useLocation } from "../../lib/locations";
 import { useMemo } from "react";
 import { ReadAloudButton } from "../read-aloud-button";
+import { WeatherBackdrop } from "./weather-backdrop";
 
 export function HeroWeather() {
   const { active, refreshTick, refresh } = useLocation();
@@ -12,7 +13,9 @@ export function HeroWeather() {
   return (
     <GlassCard className="mausam-bg col-span-12 lg:col-span-8 xl:col-span-8" glow="primary">
       <div className="relative flex flex-col gap-6 p-6 sm:p-8">
-        <div className="flex items-start justify-between gap-4">
+        <WeatherBackdrop condition={w.conditionLabel ?? w.condition} tempC={w.tempF} />
+        <div className="relative z-10 flex items-start justify-between gap-4">
+
           <div className="min-w-0">
             <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
               <span>Now in</span>
@@ -38,7 +41,7 @@ export function HeroWeather() {
           </div>
         </div>
 
-        <div className="flex items-end gap-4">
+        <div className="relative z-10 flex items-end gap-4">
           <div className="font-display text-7xl font-bold tabular-nums leading-none sm:text-8xl">{w.tempF}°C</div>
           <div className="pb-2">
             <div className="text-base font-medium">{w.conditionLabel}</div>
@@ -46,7 +49,7 @@ export function HeroWeather() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="relative z-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Metric icon={<Droplets className="h-4 w-4" />} label="Humidity" value={`${w.humidity}%`} />
           <Metric icon={<Wind className="h-4 w-4" />} label="Wind" value={`${w.windMph} km/h ${w.windDir}`} />
 
@@ -54,11 +57,12 @@ export function HeroWeather() {
           <Metric icon={<Sunrise className="h-4 w-4" />} label="Sunrise" value={w.sunrise} extra={<><Sunset className="h-3 w-3" />{w.sunset}</>} />
         </div>
 
-        <div>
+        <div className="relative z-10">
           <ReadAloudButton
             text={`Current weather in ${w.location}, ${w.region}. ${w.conditionLabel}. Temperature ${w.tempF} degrees Celsius, feels like ${w.feelsLikeF}. High ${w.high}, low ${w.low}. Humidity ${w.humidity} percent. Wind ${w.windMph} kilometers per hour from ${w.windDir}. UV index ${w.uv}.`}
           />
         </div>
+
       </div>
     </GlassCard>
   );
