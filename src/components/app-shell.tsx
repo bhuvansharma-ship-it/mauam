@@ -13,7 +13,6 @@ import { cn } from "../lib/utils";
 const NAV = [
   { to: "/", label: "Dashboard", icon: CloudSun },
   { to: "/news", label: "News", icon: Newspaper },
-  
   { to: "/alerts", label: "Alerts", icon: ShieldAlert },
   { to: "/checklist", label: "Checklist", icon: ListChecks },
   { to: "/bookmarks", label: "Saved", icon: Bookmark },
