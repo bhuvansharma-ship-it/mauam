@@ -53,6 +53,12 @@ export function HeroWeather() {
           <Metric icon={<Eye className="h-4 w-4" />} label="UV Index" value={`${w.uv}`} />
           <Metric icon={<Sunrise className="h-4 w-4" />} label="Sunrise" value={w.sunrise} extra={<><Sunset className="h-3 w-3" />{w.sunset}</>} />
         </div>
+
+        <div>
+          <ReadAloudButton
+            text={`Current weather in ${w.location}, ${w.region}. ${w.conditionLabel}. Temperature ${w.tempF} degrees Celsius, feels like ${w.feelsLikeF}. High ${w.high}, low ${w.low}. Humidity ${w.humidity} percent. Wind ${w.windMph} kilometers per hour from ${w.windDir}. UV index ${w.uv}.`}
+          />
+        </div>
       </div>
     </GlassCard>
   );
