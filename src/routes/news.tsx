@@ -65,9 +65,9 @@ function NewsPage() {
   const timeline = filtered.slice(0, 8);
 
   type S = z.infer<typeof searchSchema>;
-  const setCategory = (c: string) => navigate({ search: (p) => ({ ...(p as S), category: c }) });
-  const setQ = (q: string) => navigate({ search: (p) => ({ ...(p as S), q }) });
-  const setSeverity = (s: string) => navigate({ search: (p) => ({ ...(p as S), severity: s }) });
+  const setCategory = (c: string) => navigate({ search: (p: S) => ({ ...p, category: c }) });
+  const setQ = (q: string) => navigate({ search: (p: S) => ({ ...p, q }) });
+  const setSeverity = (s: string) => navigate({ search: (p: S) => ({ ...p, severity: s }) });
 
   return (
     <div className="space-y-6">
