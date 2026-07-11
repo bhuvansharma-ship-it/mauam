@@ -73,8 +73,8 @@ export function NewsCard({ article, size = "md" }: { article: Article; size?: "s
 }
 
 export function NewsCardCompact({ article }: { article: Article }) {
-  return (
-    <Link to="/news/$slug" params={{ slug: article.slug }} className="group flex gap-3 rounded-2xl border border-glass-border/50 bg-glass p-2.5 transition hover:border-primary/40">
+  const inner = (
+    <>
       <NewsImage article={article} className="h-20 w-24 shrink-0 rounded-xl" />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-center gap-1.5">
@@ -84,7 +84,13 @@ export function NewsCardCompact({ article }: { article: Article }) {
         <div className="line-clamp-2 text-sm font-semibold leading-snug group-hover:text-primary">{article.headline}</div>
         <SourceBadge source={article.source} />
       </div>
-    </Link>
+    </>
+  );
+  const cls = "group flex gap-3 rounded-2xl border border-glass-border/50 bg-glass p-2.5 transition hover:border-primary/40";
+  return article.url ? (
+    <a href={article.url} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
+  ) : (
+    <Link to="/news/$slug" params={{ slug: article.slug }} className={cls}>{inner}</Link>
   );
 }
 
