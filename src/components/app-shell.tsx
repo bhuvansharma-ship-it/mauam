@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Bell, Bookmark, CloudSun, ListChecks, LogOut, Menu, MoonStar, Newspaper, Settings, ShieldAlert, Sun, User, X } from "lucide-react";
+import { Bell, Bookmark, CloudSun, ListChecks, LogOut, Menu, MoonStar, Navigation, Newspaper, Settings, ShieldAlert, Sun, User, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useTheme } from "./theme-provider";
 import { LocationSwitcher } from "./location-switcher";
@@ -14,10 +14,12 @@ const NAV = [
   { to: "/", label: "Dashboard", icon: CloudSun },
   { to: "/news", label: "News", icon: Newspaper },
   { to: "/alerts", label: "Alerts", icon: ShieldAlert },
+  { to: "/travel", label: "Travel", icon: Navigation },
   { to: "/checklist", label: "Checklist", icon: ListChecks },
   { to: "/bookmarks", label: "Saved", icon: Bookmark },
   { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
+
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
