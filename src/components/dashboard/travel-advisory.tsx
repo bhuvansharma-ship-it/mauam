@@ -94,7 +94,7 @@ export function TravelAdvisory() {
                   <div className="mt-1 line-clamp-1 text-xs text-muted-foreground">{t.headline}</div>
                   <div className="mt-1 flex items-center justify-between text-[11px] text-muted-foreground">
                     <span className="inline-flex items-center gap-2">
-                      <span>{Math.round(t.tempC)}°C · {t.condition}</span>
+                      <span className="font-medium text-foreground">Dest: {Math.round(t.tempC)}°C · {t.condition}</span>
                       <span className="inline-flex items-center gap-0.5">
                         <Wind className="h-3 w-3" aria-hidden="true" />
                         {Math.round(t.windKph)} km/h
@@ -104,6 +104,18 @@ export function TravelAdvisory() {
                       {Math.round(t.distanceKm)} km · {timeAgo(t.savedAt)}
                     </span>
                   </div>
+                  <ul className="mt-2 space-y-1">
+                    {suggestActions(t).map((s, i) => {
+                      const Icon = s.icon;
+                      return (
+                        <li key={i} className="flex items-start gap-1.5 text-[11px] text-foreground/80">
+                          <Icon className="mt-0.5 h-3 w-3 shrink-0 text-primary" aria-hidden="true" />
+                          <span>{s.text}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+
                 </Link>
               </li>
             ))}
