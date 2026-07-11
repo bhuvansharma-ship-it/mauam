@@ -1,46 +1,94 @@
-import { ArrowRight, Car, Route } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { ArrowRight, Car, MapPin, Route as RouteIcon, Wind } from "lucide-react";
 import { GlassCard } from "../glass-card";
 import { cn } from "../../lib/utils";
+import { useRecentTrips, type RecentTrip } from "../../hooks/use-recent-trips";
+import { timeAgo } from "../../lib/format-time";
 
-const routes = [
-  { from: "Downtown", to: "Home", eta: "34m", status: "clear", detail: "Via I-280 S", color: "safe" },
-  { from: "Office", to: "Kids' School", eta: "12m", status: "slow", detail: "Wind delays on Bay Bridge", color: "warning" },
-  { from: "Home", to: "Shelter", eta: "8m", status: "closed", detail: "Marina Blvd flooded — reroute", color: "critical" },
-] as const;
-
-const chipColor = {
+const chipColor: Record<RecentTrip["level"], string> = {
   safe: "bg-weather-safe/15 text-weather-safe",
-  warning: "bg-weather-warning/20 text-weather-warning",
-  critical: "bg-weather-critical/15 text-weather-critical",
-} as const;
+  caution: "bg-weather-warning/20 text-weather-warning",
+  warning: "bg-weather-warning/25 text-weather-warning",
+  danger: "bg-weather-critical/15 text-weather-critical",
+};
+
+const chipLabel: Record<RecentTrip["level"], string> = {
+  safe: "Safe",
+  caution: "Caution",
+  warning: "Warning",
+  danger: "Avoid",
+};
 
 export function TravelAdvisory() {
+  const { trips } = useRecentTrips();
+
   return (
     <GlassCard className="col-span-12 sm:col-span-6 lg:col-span-4">
       <div className="p-5 sm:p-6">
-        <div className="mb-3 flex items-center gap-2">
-          <Route className="h-4 w-4" />
-          <h3 className="font-display text-lg font-semibold">Travel advisory</h3>
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <RouteIcon className="h-4 w-4" aria-hidden="true" />
+            <h3 className="font-display text-lg font-semibold">Travel advisory</h3>
+          </div>
+          <Link
+            to="/travel"
+            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+          >
+            New search <ArrowRight className="h-3 w-3" aria-hidden="true" />
+          </Link>
         </div>
-        <ul className="space-y-2">
-          {routes.map((r, i) => (
-            <li key={i} className="rounded-2xl border border-glass-border/50 bg-glass p-3">
-              <div className="flex items-center justify-between gap-2 text-sm">
-                <div className="flex min-w-0 items-center gap-1.5 truncate font-medium">
-                  <Car className="h-3.5 w-3.5 shrink-0" />
-                  <span className="truncate">{r.from}</span>
-                  <ArrowRight className="h-3 w-3 shrink-0 text-muted-foreground" />
-                  <span className="truncate">{r.to}</span>
-                </div>
-                <span className={cn("shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider", chipColor[r.color])}>{r.status}</span>
-              </div>
-              <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
-                <span>{r.detail}</span>
-                <span className="font-semibold tabular-nums text-foreground">{r.eta}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
+
+        {trips.length === 0 ? (
+          <Link
+            to="/travel"
+            className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-glass-border/60 p-6 text-center text-xs text-muted-foreground transition hover:border-primary/40 hover:bg-accent/10"
+          >
+            <MapPin className="h-5 w-5" aria-hidden="true" />
+            <span>Search a destination in Travel advisory to see it here.</span>
+          </Link>
+        ) : (
+          <ul className="space-y-2">
+            {trips.slice(0, 3).map((t) => (
+              <li key={t.id}>
+                <Link
+                  to="/travel"
+                  className="block rounded-2xl border border-glass-border/50 bg-glass p-3 transition hover:border-primary/40"
+                  aria-label={`${t.from.name} to ${t.to.name}, ${chipLabel[t.level]}`}
+                >
+                  <div className="flex items-center justify-between gap-2 text-sm">
+                    <div className="flex min-w-0 items-center gap-1.5 truncate font-medium">
+                      <Car className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                      <span className="truncate">{t.from.name}</span>
+                      <ArrowRight className="h-3 w-3 shrink-0 text-muted-foreground" aria-hidden="true" />
+                      <span className="truncate">{t.to.name}</span>
+                    </div>
+                    <span
+                      className={cn(
+                        "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
+                        chipColor[t.level],
+                      )}
+                    >
+                      {chipLabel[t.level]}
+                    </span>
+                  </div>
+                  <div className="mt-1 line-clamp-1 text-xs text-muted-foreground">{t.headline}</div>
+                  <div className="mt-1 flex items-center justify-between text-[11px] text-muted-foreground">
+                    <span className="inline-flex items-center gap-2">
+                      <span>{Math.round(t.tempC)}°C · {t.condition}</span>
+                      <span className="inline-flex items-center gap-0.5">
+                        <Wind className="h-3 w-3" aria-hidden="true" />
+                        {Math.round(t.windKph)} km/h
+                      </span>
+                    </span>
+                    <span className="font-semibold tabular-nums text-foreground">
+                      {Math.round(t.distanceKm)} km · {timeAgo(t.savedAt)}
+                    </span>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </GlassCard>
   );
