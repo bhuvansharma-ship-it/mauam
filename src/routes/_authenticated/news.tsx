@@ -108,11 +108,13 @@ function NewsPage() {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-muted-foreground" />
+          <Filter className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+          <label htmlFor="news-severity" className="sr-only">Filter by severity</label>
           <select
+            id="news-severity"
             value={search.severity}
             onChange={(e) => setSeverity(e.target.value)}
-            className="rounded-full border border-glass-border/60 bg-glass px-3 py-2 text-sm outline-none"
+            className="min-h-11 rounded-full border border-glass-border/60 bg-glass px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <option value="">All severities</option>
             {(["breaking", "critical", "advisory", "official", "info"] as NewsSeverity[]).map((s) => (
@@ -122,17 +124,21 @@ function NewsPage() {
         </div>
       </form>
 
-      <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
-        {CATEGORIES.map((c) => (
-          <button
-            key={c}
-            onClick={() => setCategory(c)}
-            className={cn(
-              "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition",
-              search.category === c ? "bg-primary text-primary-foreground" : "border border-glass-border/60 bg-glass hover:bg-accent/20",
-            )}
-          >{c}</button>
-        ))}
+      <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1" role="group" aria-label="News categories">
+        {CATEGORIES.map((c) => {
+          const active = search.category === c;
+          return (
+            <button
+              key={c}
+              onClick={() => setCategory(c)}
+              aria-pressed={active}
+              className={cn(
+                "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                active ? "bg-primary text-primary-foreground" : "border border-glass-border/60 bg-glass hover:bg-accent/20",
+              )}
+            >{c}</button>
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-12 gap-5">
