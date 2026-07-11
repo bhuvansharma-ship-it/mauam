@@ -1,4 +1,14 @@
-import { Activity, CloudRain, Flame, Home, Thermometer, Waves, Wind, Zap, type LucideIcon } from "lucide-react";
+import {
+  Activity,
+  CloudRain,
+  Flame,
+  Home,
+  Thermometer,
+  Waves,
+  Wind,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 
 export type KnowledgeSection = {
   heading: string;
@@ -70,7 +80,10 @@ export const knowledge: KnowledgeTopic[] = [
       "Do not light matches or flip switches until you have confirmed there is no gas leak.",
     ],
     sources: [
-      { name: "US Geological Survey", url: "https://www.usgs.gov/programs/earthquake-hazards/science/drop-cover-and-hold" },
+      {
+        name: "US Geological Survey",
+        url: "https://www.usgs.gov/programs/earthquake-hazards/science/drop-cover-and-hold",
+      },
       { name: "Ready.gov — Earthquakes", url: "https://www.ready.gov/earthquakes" },
     ],
   },
@@ -79,7 +92,8 @@ export const knowledge: KnowledgeTopic[] = [
     slug: "flood",
     category: "Flood",
     title: "Flood safety essentials",
-    summary: "Never walk or drive through flood water. Move to higher ground the moment a warning is issued.",
+    summary:
+      "Never walk or drive through flood water. Move to higher ground the moment a warning is issued.",
     icon: Waves,
     hue: 210,
     quickFacts: [
@@ -131,7 +145,8 @@ export const knowledge: KnowledgeTopic[] = [
     slug: "wildfire",
     category: "Wildfire",
     title: "Wildfire evacuation checklist",
-    summary: "Prepare a go-bag, memorise two evacuation routes and leave early — do not wait for a mandatory order.",
+    summary:
+      "Prepare a go-bag, memorise two evacuation routes and leave early — do not wait for a mandatory order.",
     icon: Flame,
     hue: 20,
     quickFacts: [
@@ -177,7 +192,10 @@ export const knowledge: KnowledgeTopic[] = [
     ],
     sources: [
       { name: "CAL FIRE — Ready, Set, Go!", url: "https://readyforwildfire.org/" },
-      { name: "US Forest Service — Wildfire Prep", url: "https://www.fs.usda.gov/managing-land/fire" },
+      {
+        name: "US Forest Service — Wildfire Prep",
+        url: "https://www.fs.usda.gov/managing-land/fire",
+      },
     ],
   },
   {
@@ -185,7 +203,8 @@ export const knowledge: KnowledgeTopic[] = [
     slug: "heatwave",
     category: "Heatwave",
     title: "Extreme heat protection",
-    summary: "Hydrate, avoid outdoor work 10 AM–4 PM and check on elderly neighbours and outdoor workers.",
+    summary:
+      "Hydrate, avoid outdoor work 10 AM–4 PM and check on elderly neighbours and outdoor workers.",
     icon: Thermometer,
     hue: 30,
     quickFacts: [
@@ -227,7 +246,10 @@ export const knowledge: KnowledgeTopic[] = [
     ],
     sources: [
       { name: "CDC — Extreme Heat", url: "https://www.cdc.gov/disasters/extremeheat/" },
-      { name: "IMD — Heatwave Guidelines", url: "https://mausam.imd.gov.in/imd_latest/contents/heatwave.php" },
+      {
+        name: "IMD — Heatwave Guidelines",
+        url: "https://mausam.imd.gov.in/imd_latest/contents/heatwave.php",
+      },
     ],
   },
   {
@@ -235,7 +257,8 @@ export const knowledge: KnowledgeTopic[] = [
     slug: "storm-tornado",
     category: "Storm",
     title: "Storm & tornado shelter",
-    summary: "Take shelter in an interior windowless room on the lowest floor. Cover yourself with blankets or a mattress.",
+    summary:
+      "Take shelter in an interior windowless room on the lowest floor. Cover yourself with blankets or a mattress.",
     icon: Wind,
     hue: 280,
     quickFacts: [
@@ -286,7 +309,8 @@ export const knowledge: KnowledgeTopic[] = [
     slug: "power-outage",
     category: "Public Safety",
     title: "Power outage preparedness",
-    summary: "Keep the fridge closed, unplug electronics, use torches instead of candles, and watch for CO poisoning from generators.",
+    summary:
+      "Keep the fridge closed, unplug electronics, use torches instead of candles, and watch for CO poisoning from generators.",
     icon: Zap,
     hue: 200,
     quickFacts: [
@@ -345,7 +369,8 @@ export const knowledge: KnowledgeTopic[] = [
     slug: "cyclone",
     category: "Cyclone",
     title: "Cyclone & hurricane readiness",
-    summary: "Track the forecast, secure the outside of your home, and be ready to evacuate coastal and low-lying areas 24–48 hours early.",
+    summary:
+      "Track the forecast, secure the outside of your home, and be ready to evacuate coastal and low-lying areas 24–48 hours early.",
     icon: Wind,
     hue: 260,
     quickFacts: [
@@ -404,7 +429,8 @@ export const knowledge: KnowledgeTopic[] = [
     slug: "home-emergency-kit",
     category: "Preparedness",
     title: "Build a 72-hour home emergency kit",
-    summary: "One kit, well-stocked, checked every six months — the single highest-leverage preparedness step for any household.",
+    summary:
+      "One kit, well-stocked, checked every six months — the single highest-leverage preparedness step for any household.",
     icon: Home,
     hue: 150,
     quickFacts: [
@@ -455,7 +481,10 @@ export const knowledge: KnowledgeTopic[] = [
     ],
     sources: [
       { name: "Ready.gov — Build a Kit", url: "https://www.ready.gov/kit" },
-      { name: "Red Cross — Survival Kit", url: "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/survival-kit-supplies.html" },
+      {
+        name: "Red Cross — Survival Kit",
+        url: "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/survival-kit-supplies.html",
+      },
     ],
   },
   {
@@ -463,7 +492,8 @@ export const knowledge: KnowledgeTopic[] = [
     slug: "severe-rain-urban-flood",
     category: "Flood",
     title: "Severe rain & urban flooding",
-    summary: "Cities flash-flood fast. Move off streets, avoid basements and underpasses, and never drive into standing water.",
+    summary:
+      "Cities flash-flood fast. Move off streets, avoid basements and underpasses, and never drive into standing water.",
     icon: CloudRain,
     hue: 220,
     quickFacts: [
@@ -504,7 +534,10 @@ export const knowledge: KnowledgeTopic[] = [
       "Do not swim or play in flood water.",
     ],
     sources: [
-      { name: "NDMA India — Urban Flooding", url: "https://ndma.gov.in/Natural-Hazards/Urban-Flooding" },
+      {
+        name: "NDMA India — Urban Flooding",
+        url: "https://ndma.gov.in/Natural-Hazards/Urban-Flooding",
+      },
       { name: "NOAA — Flood Safety", url: "https://www.weather.gov/safety/flood" },
     ],
   },

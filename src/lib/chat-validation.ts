@@ -14,24 +14,26 @@ const Message = z.object({
   parts: z.array(MessagePart).max(16),
 });
 
-const Location = z.object({
-  name: z.string().trim().max(120).optional(),
-  region: z.string().trim().max(120).optional(),
-  country: z.string().trim().max(120).optional(),
-  lat: z.number().min(-90).max(90).optional(),
-  lon: z.number().min(-180).max(180).optional(),
-  label: z.string().trim().max(80).optional(),
-  savedLocations: z
-    .array(
-      z.object({
-        name: z.string().trim().max(120),
-        region: z.string().trim().max(120).optional(),
-        label: z.string().trim().max(80).optional(),
-      }),
-    )
-    .max(20)
-    .optional(),
-}).optional();
+const Location = z
+  .object({
+    name: z.string().trim().max(120).optional(),
+    region: z.string().trim().max(120).optional(),
+    country: z.string().trim().max(120).optional(),
+    lat: z.number().min(-90).max(90).optional(),
+    lon: z.number().min(-180).max(180).optional(),
+    label: z.string().trim().max(80).optional(),
+    savedLocations: z
+      .array(
+        z.object({
+          name: z.string().trim().max(120),
+          region: z.string().trim().max(120).optional(),
+          label: z.string().trim().max(80).optional(),
+        }),
+      )
+      .max(20)
+      .optional(),
+  })
+  .optional();
 
 export const ChatBodySchema = z.object({
   messages: z.array(Message).min(1).max(50),

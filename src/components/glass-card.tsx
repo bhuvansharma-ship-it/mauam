@@ -22,7 +22,8 @@ export function GlassCard({
     <As
       className={cn(
         "glass relative overflow-hidden rounded-3xl",
-        glow && "before:pointer-events-none before:absolute before:-top-24 before:-right-16 before:h-64 before:w-64 before:rounded-full before:blur-3xl",
+        glow &&
+          "before:pointer-events-none before:absolute before:-top-24 before:-right-16 before:h-64 before:w-64 before:rounded-full before:blur-3xl",
         glow && glowMap[glow],
         className,
       )}

@@ -23,16 +23,22 @@ export function SevenDay() {
             const left = ((d.low - globalMin) / range) * 100;
             const right = ((d.high - globalMin) / range) * 100;
             return (
-              <div key={i} className="grid grid-cols-[64px_36px_1fr_88px] items-center gap-3 rounded-xl px-2 py-2 hover:bg-accent/10">
+              <div
+                key={i}
+                className="grid grid-cols-[64px_36px_1fr_88px] items-center gap-3 rounded-xl px-2 py-2 hover:bg-accent/10"
+              >
                 <div className="text-sm font-medium">{i === 0 ? "Today" : formatDay(d.date)}</div>
-                <div className="h-7 w-7"><WeatherIcon condition={d.condition} animated={false} /></div>
+                <div className="h-7 w-7">
+                  <WeatherIcon condition={d.condition} animated={false} />
+                </div>
                 <div className="relative h-2 rounded-full bg-muted/60">
                   <div
                     className="absolute top-0 h-2 rounded-full"
                     style={{
                       left: `${left}%`,
                       width: `${right - left}%`,
-                      background: "linear-gradient(90deg, var(--color-weather-rain), var(--color-weather-sunny))",
+                      background:
+                        "linear-gradient(90deg, var(--color-weather-rain), var(--color-weather-sunny))",
                     }}
                   />
                 </div>

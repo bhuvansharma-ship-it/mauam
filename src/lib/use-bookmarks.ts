@@ -8,7 +8,11 @@ type Store = Record<string, Article>;
 
 function readStore(): Store {
   if (typeof window === "undefined") return {};
-  try { return JSON.parse(localStorage.getItem(KEY_PAYLOAD) || "{}") as Store; } catch { return {}; }
+  try {
+    return JSON.parse(localStorage.getItem(KEY_PAYLOAD) || "{}") as Store;
+  } catch {
+    return {};
+  }
 }
 
 export function useBookmarks() {
@@ -19,36 +23,57 @@ export function useBookmarks() {
     try {
       const raw = localStorage.getItem(KEY);
       if (raw) setIds(JSON.parse(raw));
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     setStore(readStore());
   }, []);
 
   const persistIds = (next: string[]) => {
     setIds(next);
-    try { localStorage.setItem(KEY, JSON.stringify(next)); } catch {}
+    try {
+      localStorage.setItem(KEY, JSON.stringify(next));
+    } catch {
+      /* ignore */
+    }
   };
 
   const persistStore = (next: Store) => {
     setStore(next);
-    try { localStorage.setItem(KEY_PAYLOAD, JSON.stringify(next)); } catch {}
+    try {
+      localStorage.setItem(KEY_PAYLOAD, JSON.stringify(next));
+    } catch {
+      /* ignore */
+    }
   };
 
   const toggle = useCallback((id: string, article?: Article) => {
     setIds((prev) => {
       const has = prev.includes(id);
       const next = has ? prev.filter((i) => i !== id) : [...prev, id];
-      try { localStorage.setItem(KEY, JSON.stringify(next)); } catch {}
+      try {
+        localStorage.setItem(KEY, JSON.stringify(next));
+      } catch {
+        /* ignore */
+      }
       const current = readStore();
       if (has) delete current[id];
       else if (article) current[id] = article;
-      try { localStorage.setItem(KEY_PAYLOAD, JSON.stringify(current)); } catch {}
+      try {
+        localStorage.setItem(KEY_PAYLOAD, JSON.stringify(current));
+      } catch {
+        /* ignore */
+      }
       setStore(current);
       return next;
     });
   }, []);
 
   const has = useCallback((id: string) => ids.includes(id), [ids]);
-  const articles = useCallback(() => ids.map((id) => store[id]).filter((a): a is Article => Boolean(a)), [ids, store]);
+  const articles = useCallback(
+    () => ids.map((id) => store[id]).filter((a): a is Article => Boolean(a)),
+    [ids, store],
+  );
 
   return { ids, has, toggle, set: persistIds, setStore: persistStore, articles };
 }

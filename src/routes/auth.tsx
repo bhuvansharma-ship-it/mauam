@@ -12,17 +12,31 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Sign in — Mausam" },
-      { name: "description", content: "Sign in or create an account to access your personalized weather, alerts, and emergency dashboard." },
+      {
+        name: "description",
+        content:
+          "Sign in or create an account to access your personalized weather, alerts, and emergency dashboard.",
+      },
       { property: "og:title", content: "Sign in — Mausam" },
-      { property: "og:description", content: "Sign in or create an account to access your personalized weather, alerts, and emergency dashboard." },
+      {
+        property: "og:description",
+        content:
+          "Sign in or create an account to access your personalized weather, alerts, and emergency dashboard.",
+      },
       { property: "og:url", content: "https://mauam.lovable.app/auth" },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/00b364fa-3c06-4a33-b3ff-7623d2c8f8c5" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/00b364fa-3c06-4a33-b3ff-7623d2c8f8c5" },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/00b364fa-3c06-4a33-b3ff-7623d2c8f8c5",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/00b364fa-3c06-4a33-b3ff-7623d2c8f8c5",
+      },
       { name: "robots", content: "noindex" },
     ],
-    links: [
-      { rel: "canonical", href: "https://mauam.lovable.app/auth" },
-    ],
+    links: [{ rel: "canonical", href: "https://mauam.lovable.app/auth" }],
   }),
   component: AuthPage,
 });
@@ -46,7 +60,9 @@ function AuthPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); setInfo(null); setLoading(true);
+    setError(null);
+    setInfo(null);
+    setLoading(true);
     try {
       if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -151,14 +167,28 @@ function AuthPage() {
 
           <div className="mt-6 text-center text-xs text-muted-foreground">
             {mode === "signin" ? (
-              <>New here?{" "}
-                <button className="font-semibold text-primary hover:underline" onClick={() => { setMode("signup"); setError(null); }}>
+              <>
+                New here?{" "}
+                <button
+                  className="font-semibold text-primary hover:underline"
+                  onClick={() => {
+                    setMode("signup");
+                    setError(null);
+                  }}
+                >
                   Create an account
                 </button>
               </>
             ) : (
-              <>Already have an account?{" "}
-                <button className="font-semibold text-primary hover:underline" onClick={() => { setMode("signin"); setError(null); }}>
+              <>
+                Already have an account?{" "}
+                <button
+                  className="font-semibold text-primary hover:underline"
+                  onClick={() => {
+                    setMode("signin");
+                    setError(null);
+                  }}
+                >
                   Sign in
                 </button>
               </>
@@ -167,7 +197,8 @@ function AuthPage() {
         </div>
 
         <p className="mt-6 text-center text-[11px] text-muted-foreground">
-          By continuing you agree to receive weather and emergency information tailored to your saved locations.
+          By continuing you agree to receive weather and emergency information tailored to your
+          saved locations.
         </p>
       </div>
     </div>

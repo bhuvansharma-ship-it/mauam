@@ -50,13 +50,19 @@ export const Route = createFileRoute("/api/chat")({
 
         const parsed = ChatBodySchema.safeParse(raw);
         if (!parsed.success) {
-          return new Response("Invalid request payload", { status: 400, headers: SECURITY_HEADERS });
+          return new Response("Invalid request payload", {
+            status: 400,
+            headers: SECURITY_HEADERS,
+          });
         }
         const { messages, location } = parsed.data;
 
         const key = process.env.LOVABLE_API_KEY;
         if (!key) {
-          return new Response("Missing LOVABLE_API_KEY", { status: 500, headers: SECURITY_HEADERS });
+          return new Response("Missing LOVABLE_API_KEY", {
+            status: 500,
+            headers: SECURITY_HEADERS,
+          });
         }
 
         const locationBlock = location?.name
@@ -70,7 +76,9 @@ export const Route = createFileRoute("/api/chat")({
               location.savedLocations && location.savedLocations.length > 1
                 ? ` The user also has these saved locations: ${location.savedLocations
                     .map((l) => `${l.name}${l.label ? ` (${l.label})` : ""}`)
-                    .join(", ")}. If a question could apply to more than one, ask which one they mean.`
+                    .join(
+                      ", ",
+                    )}. If a question could apply to more than one, ask which one they mean.`
                 : ""
             } Tailor advice, evacuation guidance, shelter suggestions, and safety recommendations to this location and its typical climate and hazards.`
           : "";
