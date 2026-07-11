@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Bookmark } from "lucide-react";
-import { useBookmarks } from "../lib/use-bookmarks";
-import { NewsCard } from "../components/news/news-card";
+import { useBookmarks } from "../../lib/use-bookmarks";
+import { NewsCard } from "../../components/news/news-card";
 
-export const Route = createFileRoute("/bookmarks")({
+export const Route = createFileRoute("/_authenticated/bookmarks")({
   head: () => ({
     meta: [
       { title: "Saved Articles — Aurora Guardian" },

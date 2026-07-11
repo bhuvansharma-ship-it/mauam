@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { IncidentMap } from "../components/dashboard/incident-map";
-import { NearbyShelters } from "../components/dashboard/nearby-shelters";
+import { IncidentMap } from "../../components/dashboard/incident-map";
+import { NearbyShelters } from "../../components/dashboard/nearby-shelters";
 
-export const Route = createFileRoute("/map")({
+export const Route = createFileRoute("/_authenticated/map")({
   head: () => ({
     meta: [
       { title: "Live Incident Map — Aurora Guardian" },

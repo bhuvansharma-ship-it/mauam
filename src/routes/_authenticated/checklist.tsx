@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Checklist } from "../components/dashboard/checklist";
-import { PreparednessScore } from "../components/dashboard/preparedness-score";
+import { Checklist } from "../../components/dashboard/checklist";
+import { PreparednessScore } from "../../components/dashboard/preparedness-score";
 
-export const Route = createFileRoute("/checklist")({
+export const Route = createFileRoute("/_authenticated/checklist")({
   head: () => ({
     meta: [
       { title: "Emergency Preparedness Checklist — Aurora Guardian" },

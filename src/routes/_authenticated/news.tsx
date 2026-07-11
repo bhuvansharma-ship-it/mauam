@@ -4,15 +4,15 @@ import { z } from "zod";
 import { Filter, MapPin, RefreshCw, Search, TrendingUp } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { NewsCategory, NewsSeverity } from "../lib/mock/news";
-import { NewsCard, NewsCardSkeleton } from "../components/news/news-card";
-import { GlassCard } from "../components/glass-card";
-import { timeAgo } from "../lib/format-time";
-import { cn } from "../lib/utils";
-import { SourceBadge } from "../components/news/source-badge";
-import { SeverityBadge } from "../components/news/severity-badge";
-import { useLocation } from "../lib/locations";
-import { newsQueryOptions } from "../lib/news-query";
+import type { NewsCategory, NewsSeverity } from "../../lib/mock/news";
+import { NewsCard, NewsCardSkeleton } from "../../components/news/news-card";
+import { GlassCard } from "../../components/glass-card";
+import { timeAgo } from "../../lib/format-time";
+import { cn } from "../../lib/utils";
+import { SourceBadge } from "../../components/news/source-badge";
+import { SeverityBadge } from "../../components/news/severity-badge";
+import { useLocation } from "../../lib/locations";
+import { newsQueryOptions } from "../../lib/news-query";
 
 const CATEGORIES: (NewsCategory | "All")[] = [
   "All", "Weather", "Floods", "Cyclones", "Heatwaves", "Storms",
@@ -26,7 +26,7 @@ const searchSchema = z.object({
   severity: fallback(z.string(), "").default(""),
 });
 
-export const Route = createFileRoute("/news")({
+export const Route = createFileRoute("/_authenticated/news")({
   validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [

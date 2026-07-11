@@ -1,12 +1,14 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { Bell, Bookmark, CloudSun, Map, Menu, MoonStar, Newspaper, Settings, ShieldAlert, Sun, X } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Bell, Bookmark, CloudSun, LogOut, Map, Menu, MoonStar, Newspaper, Settings, ShieldAlert, Sun, User, X } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useTheme } from "./theme-provider";
 import { LocationSwitcher } from "./location-switcher";
 import { useLocation } from "../lib/locations";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { newsQueryOptions } from "../lib/news-query";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "../lib/utils";
+
 
 const NAV = [
   { to: "/", label: "Dashboard", icon: CloudSun },
@@ -75,8 +77,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Bell className="h-4 w-4" />
               <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-weather-critical animate-pulse-alert" />
             </button>
+            <UserMenu />
           </div>
         </div>
+
 
         {open && (
           <nav className="border-t border-glass-border/60 px-4 pb-3 pt-2 lg:hidden">
@@ -142,6 +146,79 @@ function BreakingTicker() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function UserMenu() {
+  const navigate = useNavigate();
+  const qc = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [profile, setProfile] = useState<{ display_name: string | null; avatar_url: string | null; email: string | null }>({ display_name: null, avatar_url: null, email: null });
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      const email = data.user?.email ?? null;
+      const uid = data.user?.id;
+      if (!uid) { setProfile({ display_name: null, avatar_url: null, email }); return; }
+      const { data: p } = await supabase.from("profiles").select("display_name,avatar_url").eq("id", uid).maybeSingle();
+      setProfile({ display_name: p?.display_name ?? null, avatar_url: p?.avatar_url ?? null, email });
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [open]);
+
+  const signOut = async () => {
+    await qc.cancelQueries();
+    qc.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  };
+
+  const name = profile.display_name || profile.email?.split("@")[0] || "Account";
+  const initial = (name[0] || "?").toUpperCase();
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="grid h-10 w-10 place-items-center rounded-full border border-glass-border/70 bg-glass text-sm font-semibold transition hover:bg-accent/20"
+        aria-label="Account menu"
+      >
+        {profile.avatar_url ? (
+          <img src={profile.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
+        ) : (
+          <span className="bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent">{initial}</span>
+        )}
+      </button>
+      {open && (
+        <div className="absolute right-0 top-12 z-50 w-64 overflow-hidden rounded-2xl border border-glass-border/60 bg-background/95 shadow-2xl backdrop-blur-xl">
+          <div className="border-b border-glass-border/60 p-4">
+            <div className="flex items-center gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-primary to-accent font-display text-base font-bold text-primary-foreground">{initial}</div>
+              <div className="min-w-0">
+                <div className="truncate font-display text-sm font-semibold">{name}</div>
+                <div className="truncate text-[11px] text-muted-foreground">{profile.email}</div>
+              </div>
+            </div>
+          </div>
+          <div className="p-1.5">
+            <Link to="/settings" onClick={() => setOpen(false)} className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-accent/20">
+              <User className="h-4 w-4" /> Account & settings
+            </Link>
+            <button onClick={signOut} className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-news-breaking hover:bg-news-breaking/10">
+              <LogOut className="h-4 w-4" /> Sign out
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
