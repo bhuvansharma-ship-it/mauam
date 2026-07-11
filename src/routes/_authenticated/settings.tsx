@@ -1,10 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "@tanstack/react-query";
 import { GlassCard } from "../../components/glass-card";
 import { useTheme } from "../../components/theme-provider";
-import { MapPin, MoonStar, Sun, Monitor, Bell, Home, Languages } from "lucide-react";
+import { MapPin, MoonStar, Sun, Monitor, Bell, Home, Languages, LogOut } from "lucide-react";
 import { useLocation } from "../../lib/locations";
 import { LANGUAGES, setLanguage, type LangCode } from "../../lib/i18n";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
