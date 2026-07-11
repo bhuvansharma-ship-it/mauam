@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Car, MapPin, Route as RouteIcon, Wind } from "lucide-react";
+import { ArrowRight, Car, CloudRain, Droplets, MapPin, Route as RouteIcon, Snowflake, Sun, Thermometer, Umbrella, Wind, Zap } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { GlassCard } from "../glass-card";
 import { cn } from "../../lib/utils";
 import { useRecentTrips, type RecentTrip } from "../../hooks/use-recent-trips";
@@ -18,6 +19,25 @@ const chipLabel: Record<RecentTrip["level"], string> = {
   warning: "Warning",
   danger: "Avoid",
 };
+
+type Suggestion = { icon: LucideIcon; text: string };
+
+function suggestActions(t: RecentTrip): Suggestion[] {
+  const s: Suggestion[] = [];
+  const c = t.condition.toLowerCase();
+  if (t.level === "danger") s.push({ icon: Zap, text: "Postpone trip if possible" });
+  if (/storm|thunder/.test(c)) s.push({ icon: Zap, text: "Avoid open areas; delay travel" });
+  if (/rain|drizzle|shower/.test(c)) s.push({ icon: Umbrella, text: "Carry rain gear; drive slowly" });
+  if (/snow|sleet|blizzard/.test(c)) s.push({ icon: Snowflake, text: "Use snow tyres; check road closures" });
+  if (/fog|mist|haze/.test(c)) s.push({ icon: Droplets, text: "Use low-beam lights; keep distance" });
+  if (t.windKph >= 40) s.push({ icon: Wind, text: "High winds — secure loose items" });
+  if (t.tempC >= 35) s.push({ icon: Thermometer, text: "Hydrate; avoid midday travel" });
+  if (t.tempC <= 5) s.push({ icon: Thermometer, text: "Layer up; watch for icy roads" });
+  if (s.length === 0) s.push({ icon: Sun, text: "Clear to travel — enjoy the ride" });
+  if (s.length === 1 && t.level !== "safe") s.push({ icon: CloudRain, text: "Check forecast before departure" });
+  return s.slice(0, 2);
+}
+
 
 export function TravelAdvisory() {
   const { trips } = useRecentTrips();
