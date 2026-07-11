@@ -48,7 +48,12 @@ export function AppShell({ children }: { children: ReactNode }) {
             {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
 
-          <Link to="/" className="flex items-center gap-2" aria-label="Mausam home">
+          <Link
+            to="/"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="flex items-center gap-2"
+            aria-label="Mausam home"
+          >
             <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg" aria-hidden="true">
               <CloudSun className="h-5 w-5 text-primary-foreground" />
             </div>
