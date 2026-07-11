@@ -80,14 +80,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Mauasam— Weather, Emergency & News" },
+      { title: "Mausam — Weather, Emergency & News" },
       {
         name: "description",
         content:
           "Real-time weather, emergency preparedness, and verified public-safety news in one calm, beautiful dashboard.",
       },
       { name: "author", content: "Mausam" },
-      { property: "og:title", content: "Mauasam— Weather, Emergency & News" },
+      { property: "og:title", content: "Mausam — Weather, Emergency & News" },
       {
         property: "og:description",
         content:
@@ -95,7 +95,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Mauasam— Weather, Emergency & News" },
+      { name: "twitter:title", content: "Mausam — Weather, Emergency & News" },
       { name: "twitter:description", content: "Real-time weather, emergency preparedness, and verified public-safety news in one calm, beautiful dashboard." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/00b364fa-3c06-4a33-b3ff-7623d2c8f8c5" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/00b364fa-3c06-4a33-b3ff-7623d2c8f8c5" },
