@@ -14,7 +14,104 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      saved_locations: {
+        Row: {
+          country: string
+          created_at: string
+          id: string
+          is_home: boolean
+          label: string | null
+          latitude: number
+          longitude: number
+          name: string
+          notifications: boolean
+          region: string
+          sort_order: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          country?: string
+          created_at?: string
+          id?: string
+          is_home?: boolean
+          label?: string | null
+          latitude: number
+          longitude: number
+          name: string
+          notifications?: boolean
+          region?: string
+          sort_order?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          country?: string
+          created_at?: string
+          id?: string
+          is_home?: boolean
+          label?: string | null
+          latitude?: number
+          longitude?: number
+          name?: string
+          notifications?: boolean
+          region?: string
+          sort_order?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_preferences: {
+        Row: {
+          active_location_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active_location_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active_location_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_preferences_active_location_id_fkey"
+            columns: ["active_location_id"]
+            isOneToOne: false
+            referencedRelation: "saved_locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
