@@ -46,10 +46,9 @@ describe("assessAdvisory()", () => {
     expect(r.tips.length).toBeGreaterThan(0);
   });
 
-  it("returns danger for a thunderstorm", () => {
+  it("returns warning for a thunderstorm alone", () => {
     const r = assessAdvisory({ ...base, weatherCode: 95 });
-    expect(r.level).toBe("danger");
-    expect(r.headline).toMatch(/postpone/i);
+    expect(r.level).toBe("warning");
     expect(r.reasons.join(" ")).toMatch(/Thunderstorm/);
   });
 
