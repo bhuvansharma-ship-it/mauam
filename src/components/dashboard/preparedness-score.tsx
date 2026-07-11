@@ -1,13 +1,15 @@
 import { Shield } from "lucide-react";
 import { GlassCard } from "../glass-card";
-import { initialChecklist } from "../../lib/mock/emergency";
+import { useChecklist } from "../../lib/use-checklist";
 
 export function PreparednessScore() {
-  const done = initialChecklist.filter((i) => i.done).length;
-  const pct = Math.round((done / initialChecklist.length) * 100);
+  const { items } = useChecklist();
+  const done = items.filter((i) => i.done).length;
+  const pct = Math.round((done / items.length) * 100);
   const r = 52;
   const c = 2 * Math.PI * r;
   const dash = (pct / 100) * c;
+
   return (
     <GlassCard className="col-span-12 sm:col-span-6 lg:col-span-4" glow="accent">
       <div className="flex flex-col items-center gap-3 p-6">
@@ -32,7 +34,7 @@ export function PreparednessScore() {
         </div>
         <div className="text-center text-sm">
           <div className="font-medium">{pct >= 80 ? "Well prepared" : pct >= 50 ? "Getting there" : "Needs attention"}</div>
-          <div className="text-xs text-muted-foreground">{done} of {initialChecklist.length} tasks complete</div>
+          <div className="text-xs text-muted-foreground">{done} of {items.length} tasks complete</div>
         </div>
       </div>
     </GlassCard>

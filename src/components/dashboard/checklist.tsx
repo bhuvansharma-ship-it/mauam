@@ -1,13 +1,13 @@
 import { Check } from "lucide-react";
-import { useState } from "react";
 import { GlassCard } from "../glass-card";
-import { initialChecklist, type ChecklistItem } from "../../lib/mock/emergency";
+import { useChecklist } from "../../lib/use-checklist";
 import { cn } from "../../lib/utils";
 
 export function Checklist() {
-  const [items, setItems] = useState<ChecklistItem[]>(initialChecklist);
+  const { items, toggle } = useChecklist();
   const groups = Array.from(new Set(items.map((i) => i.group)));
   const done = items.filter((i) => i.done).length;
+
   return (
     <GlassCard className="col-span-12 sm:col-span-6 lg:col-span-4">
       <div className="p-5 sm:p-6">
@@ -26,7 +26,8 @@ export function Checklist() {
                 {items.filter((i) => i.group === g).map((i) => (
                   <li key={i.id}>
                     <button
-                      onClick={() => setItems((prev) => prev.map((x) => x.id === i.id ? { ...x, done: !x.done } : x))}
+                      onClick={() => toggle(i.id)}
+
                       className="flex w-full items-center gap-3 rounded-xl px-2 py-1.5 text-left text-sm hover:bg-accent/15"
                     >
                       <span className={cn("grid h-5 w-5 shrink-0 place-items-center rounded-md border transition", i.done ? "border-weather-safe bg-weather-safe text-background" : "border-muted-foreground/40")}>
