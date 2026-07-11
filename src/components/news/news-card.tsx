@@ -52,7 +52,7 @@ export function NewsCard({ article, size = "md" }: { article: Article; size?: "s
           <span className="text-muted-foreground">· {timeAgo(article.publishedAt)}</span>
           <div className="ml-auto flex items-center gap-1">
             <button
-              onClick={(e) => { e.preventDefault(); toggle(article.id); }}
+              onClick={(e) => { e.preventDefault(); toggle(article.id, article); }}
               className="grid h-8 w-8 place-items-center rounded-full hover:bg-accent/20"
               aria-label="Bookmark"
             >
