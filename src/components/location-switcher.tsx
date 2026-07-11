@@ -80,7 +80,7 @@ export function LocationSwitcher() {
   const activeWeather = useMemo(() => weatherFor(active), [active]);
 
   const pickSuggestion = (s: GeoSuggestion) => {
-    addLocation({ name: s.name, region: s.region, country: s.country, lat: s.lat, lon: s.lon });
+    void addLocation({ name: s.name, region: s.region, country: s.country, lat: s.lat, lon: s.lon });
     setQuery("");
     setSuggestions([]);
     setOpen(false);
