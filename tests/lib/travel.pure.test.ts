@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assessAdvisory, condition, haversineKm } from "@/lib/travel.pure";
+import { assessAdvisory, condition, haversineKm } from "../../src/lib/travel.pure";
 
 describe("condition()", () => {
   it("maps known WMO codes", () => {

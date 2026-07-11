@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ChatBodySchema } from "@/lib/chat-validation";
+import { ChatBodySchema } from "../../src/lib/chat-validation";
 
 describe("ChatBodySchema", () => {
   it("accepts a minimal valid body", () => {

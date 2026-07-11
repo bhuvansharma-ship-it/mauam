@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { act, renderHook } from "@testing-library/react";
-import { useChecklist } from "@/lib/use-checklist";
+import { useChecklist } from "../../src/lib/use-checklist";
 
 describe("useChecklist", () => {
   it("exposes items with expected shape", () => {
