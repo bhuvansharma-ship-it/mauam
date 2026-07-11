@@ -51,8 +51,8 @@ function addDays(n: number) {
 
 function baseTemp(lat: number) {
   const absLat = Math.abs(lat);
-  // Warmer near equator, cooler toward poles.
-  return Math.round(88 - absLat * 0.85);
+  // Celsius: warm near equator (~31°C), cooler toward poles.
+  return Math.round(31 - absLat * 0.47);
 }
 
 function pickCondition(h: number, i: number): Condition {
@@ -61,17 +61,17 @@ function pickCondition(h: number, i: number): Condition {
 
 export function weatherFor(loc: Seed): CurrentWeather {
   const h = hash(loc.name + loc.lat.toFixed(2));
-  const tempF = baseTemp(loc.lat) + ((h % 9) - 4);
+  const tempC = baseTemp(loc.lat) + ((h % 7) - 3);
   const condition = pickCondition(h, 0);
   return {
     location: loc.name,
     region: loc.region,
-    tempF,
-    feelsLikeF: tempF - ((h % 4) - 1),
+    tempF: tempC,
+    feelsLikeF: tempC - ((h % 3) - 1),
     condition,
     conditionLabel: LABELS[condition],
-    high: tempF + 3 + (h % 4),
-    low: tempF - 6 - (h % 5),
+    high: tempC + 2 + (h % 3),
+    low: tempC - 4 - (h % 3),
     humidity: 45 + (h % 45),
     windMph: 4 + (h % 18),
     windDir: DIRS[h % DIRS.length],
@@ -87,7 +87,7 @@ export function hourlyFor(loc: Seed): HourlyPoint[] {
   const now = new Date();
   return Array.from({ length: 24 }, (_, i) => {
     const d = new Date(now.getTime() + i * 3600 * 1000);
-    const t = base - 5 + Math.round(7 * Math.sin((i + (h % 6)) / 3) + (i > 6 && i < 18 ? 6 : 0));
+    const t = base - 3 + Math.round(4 * Math.sin((i + (h % 6)) / 3) + (i > 6 && i < 18 ? 3 : 0));
     const cond = pickCondition(h, i);
     return {
       time: d.toISOString(),
@@ -103,8 +103,8 @@ export function sevenDayFor(loc: Seed): DayForecast[] {
   const base = baseTemp(loc.lat);
   return Array.from({ length: 7 }, (_, i) => {
     const cond = pickCondition(h, i * 2 + 1);
-    const high = base + 4 + ((h + i) % 6);
-    const low = base - 6 - ((h + i * 3) % 6);
+    const high = base + 2 + ((h + i) % 4);
+    const low = base - 4 - ((h + i * 3) % 4);
     return {
       date: addDays(i),
       condition: cond,
@@ -114,6 +114,7 @@ export function sevenDayFor(loc: Seed): DayForecast[] {
     };
   });
 }
+
 
 // Back-compat default exports (used by any not-yet-migrated component/mocks).
 const DEFAULT_SEED: Seed = { name: "Bengaluru", region: "Karnataka, India", lat: 12.97, lon: 77.59 };
