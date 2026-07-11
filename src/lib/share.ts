@@ -4,7 +4,7 @@ export async function shareOrCopy(data: { title: string; text?: string; url: str
       await (navigator as Navigator & { share: (d: ShareData) => Promise<void> }).share(data);
       return "shared" as const;
     }
-  } catch {}
+  } catch { /* ignore */ }
   try {
     await navigator.clipboard.writeText(data.url);
     return "copied" as const;
