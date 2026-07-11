@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Bell, Bookmark, CloudSun, ListChecks, LogOut, Map, Menu, MoonStar, Newspaper, Settings, ShieldAlert, Sun, User, X } from "lucide-react";
+import { Bell, Bookmark, CloudSun, ListChecks, LogOut, Menu, MoonStar, Newspaper, Settings, ShieldAlert, Sun, User, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useTheme } from "./theme-provider";
 import { LocationSwitcher } from "./location-switcher";
@@ -13,7 +13,7 @@ import { cn } from "../lib/utils";
 const NAV = [
   { to: "/", label: "Dashboard", icon: CloudSun },
   { to: "/news", label: "News", icon: Newspaper },
-  { to: "/map", label: "Map", icon: Map },
+  
   { to: "/alerts", label: "Alerts", icon: ShieldAlert },
   { to: "/checklist", label: "Checklist", icon: ListChecks },
   { to: "/bookmarks", label: "Saved", icon: Bookmark },
