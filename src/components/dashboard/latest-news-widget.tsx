@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { GlassCard } from "../glass-card";
 import { NewsCard, NewsCardCompact, NewsCardSkeleton } from "../news/news-card";
-import { useLocations } from "../../lib/locations";
+import { useLocation } from "../../lib/locations";
 import { newsQueryOptions } from "../../lib/news-query";
 import type { Article } from "../../lib/mock/news";
 
@@ -18,7 +18,7 @@ const CHIP_TO_CATEGORY: Record<(typeof CHIPS)[number], string> = {
 };
 
 export function LatestNewsWidget() {
-  const { active } = useLocations();
+  const { active } = useLocation();
   const [chip, setChip] = useState<(typeof CHIPS)[number]>("All");
   const query = useQuery(newsQueryOptions({ location: active, category: CHIP_TO_CATEGORY[chip] }));
 
