@@ -22,17 +22,17 @@ function Dashboard() {
     <div className="grid grid-cols-12 gap-4 sm:gap-5">
       <AlertBanner />
       <HeroWeather />
+      <LatestNewsWidget />
       <PreparednessScore />
       <HourlyForecast />
       <AIAssistant />
-      <SevenDay />
       <Checklist />
-      <LatestNewsWidget />
       <TravelAdvisory />
       <NearbyShelters />
       <EmergencyContacts />
       <Notifications />
       <KnowledgeHub />
+      <SevenDay />
     </div>
   );
 }
