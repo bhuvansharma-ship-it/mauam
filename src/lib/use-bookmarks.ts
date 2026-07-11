@@ -1,0 +1,31 @@
+import { useEffect, useState, useCallback } from "react";
+
+const KEY = "ag:bookmarks";
+
+export function useBookmarks() {
+  const [ids, setIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) setIds(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  const persist = (next: string[]) => {
+    setIds(next);
+    try { localStorage.setItem(KEY, JSON.stringify(next)); } catch {}
+  };
+
+  const toggle = useCallback((id: string) => {
+    setIds((prev) => {
+      const next = prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id];
+      try { localStorage.setItem(KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  }, []);
+
+  const has = useCallback((id: string) => ids.includes(id), [ids]);
+
+  return { ids, has, toggle, set: persist };
+}
