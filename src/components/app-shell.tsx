@@ -27,7 +27,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <header className="sticky top-0 z-40 border-b border-glass-border/60 bg-background/60 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-4 sm:px-6">
           <button
