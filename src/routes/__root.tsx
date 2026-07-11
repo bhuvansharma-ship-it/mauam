@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeProvider } from "../components/theme-provider";
 import { AppShell } from "../components/app-shell";
+import { LocationProvider } from "../lib/locations";
 
 function NotFoundComponent() {
   return (
@@ -138,9 +139,11 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AppShell>
-          <Outlet />
-        </AppShell>
+        <LocationProvider>
+          <AppShell>
+            <Outlet />
+          </AppShell>
+        </LocationProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
