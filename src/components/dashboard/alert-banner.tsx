@@ -6,6 +6,7 @@ import { cn } from "../../lib/utils";
 import { Link } from "@tanstack/react-router";
 import { useLocation } from "../../lib/locations";
 import { alertsQueryOptions } from "../../lib/alerts-query";
+import { ReadAloudButton } from "../read-aloud-button";
 
 const styleFor = {
   critical: "border-weather-critical/50 bg-weather-critical/10",
@@ -32,6 +33,9 @@ export function AlertBanner() {
           <span className="text-xs text-muted-foreground">· {top.region} · {timeAgo(top.issued)}</span>
         </div>
         <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{top.body}</p>
+        <div className="mt-2">
+          <ReadAloudButton text={`${top.title}. ${top.body}`} />
+        </div>
       </div>
       <Link to="/alerts" className="hidden shrink-0 rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background hover:opacity-90 sm:inline-flex">View details</Link>
       <button aria-label="Dismiss" onClick={() => setDismissed((d) => [...d, top.id])} className="grid h-9 w-9 shrink-0 place-items-center rounded-full hover:bg-background/40">
