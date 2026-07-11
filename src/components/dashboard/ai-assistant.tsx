@@ -164,8 +164,14 @@ export function AIAssistant() {
           </div>
           <div className="min-w-0">
             <h3 className="font-display text-base font-semibold">AI Emergency Assistant</h3>
-            <div className="text-[11px] text-muted-foreground">
-              {isLoading ? "Aurora is thinking…" : "Voice + text · Gemini 2.5"}
+            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              {isLoading ? (
+                "Aurora is thinking…"
+              ) : (
+                <>
+                  <MapPin className="h-3 w-3" /> {active.name} · Voice + text
+                </>
+              )}
             </div>
           </div>
         </div>
