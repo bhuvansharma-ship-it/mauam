@@ -44,13 +44,5 @@ export const alerts: Alert[] = [
   },
 ];
 
-function hoursAgo(h: number) {
-  const d = new Date();
-  d.setHours(d.getHours() - h);
-  return d.toISOString();
-}
-function hoursAhead(h: number) {
-  const d = new Date();
-  d.setHours(d.getHours() + h);
-  return d.toISOString();
-}
+function hoursAgo(h: number) { const d = new Date(); d.setHours(d.getHours() - h); return d.toISOString(); }
+function hoursAhead(h: number) { const d = new Date(); d.setHours(d.getHours() + h); return d.toISOString(); }

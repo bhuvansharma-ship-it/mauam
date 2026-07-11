@@ -22,31 +22,15 @@ export function HourlyForecast() {
             {hourly.map((h, i) => {
               const t = (h.tempF - min) / Math.max(1, max - min);
               return (
-                <div
-                  key={i}
-                  className="flex w-16 flex-col items-center gap-2 rounded-2xl border border-glass-border/50 bg-glass py-3"
-                >
-                  <div className="text-[11px] font-medium text-muted-foreground">
-                    {i === 0 ? "Now" : formatHour(h.time)}
-                  </div>
-                  <div className="h-8 w-8">
-                    <WeatherIcon condition={h.condition} animated={false} />
-                  </div>
+                <div key={i} className="flex w-16 flex-col items-center gap-2 rounded-2xl border border-glass-border/50 bg-glass py-3">
+                  <div className="text-[11px] font-medium text-muted-foreground">{i === 0 ? "Now" : formatHour(h.time)}</div>
+                  <div className="h-8 w-8"><WeatherIcon condition={h.condition} animated={false} /></div>
                   <div className="text-sm font-semibold tabular-nums">{h.tempF}°</div>
                   <div className="h-1.5 w-10 overflow-hidden rounded-full bg-weather-rain/15">
-                    <div
-                      className="h-full rounded-full bg-weather-rain"
-                      style={{ width: `${h.precip}%` }}
-                    />
+                    <div className="h-full rounded-full bg-weather-rain" style={{ width: `${h.precip}%` }} />
                   </div>
                   <div className="text-[10px] text-muted-foreground tabular-nums">{h.precip}%</div>
-                  <div
-                    className="mt-1 h-1 w-8 rounded-full"
-                    style={{
-                      background: `linear-gradient(90deg, var(--color-weather-rain), var(--color-weather-sunny))`,
-                      opacity: 0.4 + t * 0.6,
-                    }}
-                  />
+                  <div className="mt-1 h-1 w-8 rounded-full" style={{ background: `linear-gradient(90deg, var(--color-weather-rain), var(--color-weather-sunny))`, opacity: 0.4 + t * 0.6 }} />
                 </div>
               );
             })}

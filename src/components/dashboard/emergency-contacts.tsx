@@ -13,19 +13,11 @@ export function EmergencyContacts() {
         </div>
         <div className="grid grid-cols-2 gap-2">
           {contacts.map((c) => (
-            <a
-              key={c.id}
-              href={`tel:${c.phone}`}
-              className={cn(
-                "flex flex-col rounded-2xl border p-3 transition hover:scale-[1.02]",
-                c.kind === "emergency"
-                  ? "border-weather-critical/40 bg-weather-critical/5"
-                  : "border-glass-border/60 bg-glass",
-              )}
-            >
-              <div className="truncate text-xs font-medium text-muted-foreground">
-                {c.kind === "emergency" ? "Emergency" : "Personal"}
-              </div>
+            <a key={c.id} href={`tel:${c.phone}`} className={cn(
+              "flex flex-col rounded-2xl border p-3 transition hover:scale-[1.02]",
+              c.kind === "emergency" ? "border-weather-critical/40 bg-weather-critical/5" : "border-glass-border/60 bg-glass"
+            )}>
+              <div className="truncate text-xs font-medium text-muted-foreground">{c.kind === "emergency" ? "Emergency" : "Personal"}</div>
               <div className="truncate text-sm font-semibold">{c.name}</div>
               <div className="mt-1 font-display text-base font-bold tabular-nums">{c.phone}</div>
             </a>

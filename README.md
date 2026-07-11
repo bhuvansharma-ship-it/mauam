@@ -28,12 +28,12 @@ A weather and disaster-preparedness dashboard for travellers, residents, and eme
 
 ## Scripts
 
-| Script          | Description               |
-| --------------- | ------------------------- |
-| `bun dev`       | Start the Vite dev server |
-| `bun run build` | Build for production      |
-| `bun test`      | Run the Vitest test suite |
-| `bun lint`      | Run ESLint                |
+| Script | Description |
+| --- | --- |
+| `bun dev` | Start the Vite dev server |
+| `bun run build` | Build for production |
+| `bun test` | Run the Vitest test suite |
+| `bun lint` | Run ESLint |
 
 ## Project Structure
 

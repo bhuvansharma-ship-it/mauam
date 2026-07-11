@@ -12,7 +12,5 @@ export function messageText(m: UIMessage): string {
 export function ChatBubble({ message, pending }: { message: UIMessage; pending: boolean }) {
   const text = messageText(message);
   const placeholder = message.role === "assistant" && pending ? "…" : "";
-  return (
-    <div className={message.role === "user" ? USER_CLS : ASSISTANT_CLS}>{text || placeholder}</div>
-  );
+  return <div className={message.role === "user" ? USER_CLS : ASSISTANT_CLS}>{text || placeholder}</div>;
 }

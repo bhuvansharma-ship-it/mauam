@@ -8,29 +8,13 @@ import { Checklist } from "../../components/dashboard/checklist";
 import { LatestNewsWidget } from "../../components/dashboard/latest-news-widget";
 
 // Below-the-fold widgets: lazy-loaded to shrink initial dashboard chunk.
-const AIAssistant = lazy(() =>
-  import("../../components/dashboard/ai-assistant").then((m) => ({ default: m.AIAssistant })),
-);
-const TravelAdvisory = lazy(() =>
-  import("../../components/dashboard/travel-advisory").then((m) => ({ default: m.TravelAdvisory })),
-);
-const NearbyShelters = lazy(() =>
-  import("../../components/dashboard/nearby-shelters").then((m) => ({ default: m.NearbyShelters })),
-);
-const EmergencyContacts = lazy(() =>
-  import("../../components/dashboard/emergency-contacts").then((m) => ({
-    default: m.EmergencyContacts,
-  })),
-);
-const Notifications = lazy(() =>
-  import("../../components/dashboard/notifications").then((m) => ({ default: m.Notifications })),
-);
-const KnowledgeHub = lazy(() =>
-  import("../../components/dashboard/knowledge-hub").then((m) => ({ default: m.KnowledgeHub })),
-);
-const SevenDay = lazy(() =>
-  import("../../components/dashboard/seven-day").then((m) => ({ default: m.SevenDay })),
-);
+const AIAssistant       = lazy(() => import("../../components/dashboard/ai-assistant").then((m) => ({ default: m.AIAssistant })));
+const TravelAdvisory    = lazy(() => import("../../components/dashboard/travel-advisory").then((m) => ({ default: m.TravelAdvisory })));
+const NearbyShelters    = lazy(() => import("../../components/dashboard/nearby-shelters").then((m) => ({ default: m.NearbyShelters })));
+const EmergencyContacts = lazy(() => import("../../components/dashboard/emergency-contacts").then((m) => ({ default: m.EmergencyContacts })));
+const Notifications     = lazy(() => import("../../components/dashboard/notifications").then((m) => ({ default: m.Notifications })));
+const KnowledgeHub      = lazy(() => import("../../components/dashboard/knowledge-hub").then((m) => ({ default: m.KnowledgeHub })));
+const SevenDay          = lazy(() => import("../../components/dashboard/seven-day").then((m) => ({ default: m.SevenDay })));
 
 export const Route = createFileRoute("/_authenticated/")({
   component: Dashboard,
@@ -45,31 +29,18 @@ function Dashboard() {
     <div className="grid grid-cols-12 gap-4 sm:gap-5">
       <AlertBanner />
       <HeroWeather />
-      <Suspense fallback={<WidgetFallback />}>
-        <KnowledgeHub />
-      </Suspense>
+      <Suspense fallback={<WidgetFallback />}><KnowledgeHub /></Suspense>
       <LatestNewsWidget />
       <PreparednessScore />
       <HourlyForecast />
-      <Suspense fallback={<WidgetFallback />}>
-        <AIAssistant />
-      </Suspense>
+      <Suspense fallback={<WidgetFallback />}><AIAssistant /></Suspense>
       <Checklist />
-      <Suspense fallback={<WidgetFallback />}>
-        <TravelAdvisory />
-      </Suspense>
-      <Suspense fallback={<WidgetFallback />}>
-        <NearbyShelters />
-      </Suspense>
-      <Suspense fallback={<WidgetFallback />}>
-        <EmergencyContacts />
-      </Suspense>
-      <Suspense fallback={<WidgetFallback />}>
-        <Notifications />
-      </Suspense>
-      <Suspense fallback={<WidgetFallback />}>
-        <SevenDay />
-      </Suspense>
+      <Suspense fallback={<WidgetFallback />}><TravelAdvisory /></Suspense>
+      <Suspense fallback={<WidgetFallback />}><NearbyShelters /></Suspense>
+      <Suspense fallback={<WidgetFallback />}><EmergencyContacts /></Suspense>
+      <Suspense fallback={<WidgetFallback />}><Notifications /></Suspense>
+      <Suspense fallback={<WidgetFallback />}><SevenDay /></Suspense>
+
     </div>
   );
 }

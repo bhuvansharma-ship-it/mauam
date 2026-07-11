@@ -23,20 +23,14 @@ export function KnowledgeHub() {
                 >
                   <div
                     className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl"
-                    style={{
-                      backgroundImage: `linear-gradient(135deg, hsl(${f.hue} 85% 55%), hsl(${(f.hue + 40) % 360} 85% 55%))`,
-                    }}
+                    style={{ backgroundImage: `linear-gradient(135deg, hsl(${f.hue} 85% 55%), hsl(${(f.hue + 40) % 360} 85% 55%))` }}
                   >
                     <Icon className="h-4 w-4 text-primary-foreground" aria-hidden="true" />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-[10px] font-semibold uppercase tracking-wider text-primary">
-                      {f.category}
-                    </div>
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-primary">{f.category}</div>
                     <div className="mt-0.5 text-sm font-semibold">{f.title}</div>
-                    <div className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
-                      {f.summary}
-                    </div>
+                    <div className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{f.summary}</div>
                   </div>
                 </Link>
               </li>

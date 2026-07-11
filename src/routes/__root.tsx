@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import "../lib/i18n";
 import { applyDocumentLangDir } from "../lib/i18n";
 
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-dvh items-center justify-center px-4">
@@ -48,7 +49,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-dvh items-center justify-center px-4">
       <div className="glass max-w-md rounded-3xl p-10 text-center">
-        <h1 className="font-display text-xl font-semibold tracking-tight">This page didn't load</h1>
+        <h1 className="font-display text-xl font-semibold tracking-tight">
+          This page didn't load
+        </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Something went wrong on our end. You can try refreshing or head back home.
         </p>
@@ -97,11 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Mausam — Weather, Emergency & News" },
-      {
-        name: "twitter:description",
-        content:
-          "Real-time weather, emergency preparedness, and verified public-safety news in one calm, beautiful dashboard.",
-      },
+      { name: "twitter:description", content: "Real-time weather, emergency preparedness, and verified public-safety news in one calm, beautiful dashboard." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -175,3 +174,4 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
+

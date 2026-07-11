@@ -12,10 +12,7 @@ export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
       { title: "Settings — Mausam" },
-      {
-        name: "description",
-        content: "Manage location, language, theme, and notification preferences.",
-      },
+      { name: "description", content: "Manage location, language, theme, and notification preferences." },
     ],
   }),
   component: SettingsPage,
@@ -41,17 +38,12 @@ function SettingsPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-          {t("settings.title")}
-        </h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">{t("settings.title")}</h1>
       </div>
 
       <GlassCard>
         <div className="p-6">
-          <div className="mb-3 flex items-center gap-2">
-            <MapPin className="h-4 w-4" />
-            <h3 className="font-display text-lg font-semibold">{t("settings.location")}</h3>
-          </div>
+          <div className="mb-3 flex items-center gap-2"><MapPin className="h-4 w-4" /><h3 className="font-display text-lg font-semibold">{t("settings.location")}</h3></div>
           <div className="rounded-2xl border border-glass-border/60 bg-glass px-4 py-3">
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
@@ -76,9 +68,7 @@ function SettingsPage() {
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
             {t("settings.mirrorNote")}{" "}
-            <Link to="/" className="text-primary hover:underline">
-              {t("common.change")}
-            </Link>
+            <Link to="/" className="text-primary hover:underline">{t("common.change")}</Link>
             {locations.length > 1 ? ` (${locations.length}).` : "."}
           </p>
         </div>
@@ -86,10 +76,7 @@ function SettingsPage() {
 
       <GlassCard>
         <div className="p-6">
-          <div className="mb-3 flex items-center gap-2">
-            <Languages className="h-4 w-4" />
-            <h3 className="font-display text-lg font-semibold">{t("settings.language")}</h3>
-          </div>
+          <div className="mb-3 flex items-center gap-2"><Languages className="h-4 w-4" /><h3 className="font-display text-lg font-semibold">{t("settings.language")}</h3></div>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {LANGUAGES.map((l) => {
               const active = currentLang === l.code;
@@ -99,15 +86,11 @@ function SettingsPage() {
                   onClick={() => setLanguage(l.code)}
                   className={
                     "flex flex-col items-start gap-0.5 rounded-2xl border p-3 text-left transition " +
-                    (active
-                      ? "border-primary bg-primary/10"
-                      : "border-glass-border/60 bg-glass hover:bg-accent/20")
+                    (active ? "border-primary bg-primary/10" : "border-glass-border/60 bg-glass hover:bg-accent/20")
                   }
                   aria-pressed={active}
                 >
-                  <span className="text-sm font-semibold" dir={l.dir}>
-                    {l.native}
-                  </span>
+                  <span className="text-sm font-semibold" dir={l.dir}>{l.native}</span>
                   <span className="text-[11px] text-muted-foreground">{l.label}</span>
                 </button>
               );
@@ -118,26 +101,14 @@ function SettingsPage() {
 
       <GlassCard>
         <div className="p-6">
-          <div className="mb-3 flex items-center gap-2">
-            <MoonStar className="h-4 w-4" />
-            <h3 className="font-display text-lg font-semibold">{t("settings.theme")}</h3>
-          </div>
+          <div className="mb-3 flex items-center gap-2"><MoonStar className="h-4 w-4" /><h3 className="font-display text-lg font-semibold">{t("settings.theme")}</h3></div>
           <div className="grid grid-cols-3 gap-2">
-            {[
+            {([
               { v: "light" as const, Icon: Sun, key: "light" as const },
               { v: "dark" as const, Icon: MoonStar, key: "dark" as const },
               { v: "system" as const, Icon: Monitor, key: "system" as const },
-            ].map(({ v, Icon, key }) => (
-              <button
-                key={v}
-                onClick={() => setTheme(v)}
-                className={
-                  "flex flex-col items-center gap-2 rounded-2xl border p-4 " +
-                  (theme === v
-                    ? "border-primary bg-primary/10"
-                    : "border-glass-border/60 bg-glass hover:bg-accent/20")
-                }
-              >
+            ]).map(({ v, Icon, key }) => (
+              <button key={v} onClick={() => setTheme(v)} className={"flex flex-col items-center gap-2 rounded-2xl border p-4 " + (theme === v ? "border-primary bg-primary/10" : "border-glass-border/60 bg-glass hover:bg-accent/20")}>
                 <Icon className="h-5 w-5" />
                 <span className="text-sm font-medium">{t(`theme.${key}`)}</span>
               </button>
@@ -148,21 +119,10 @@ function SettingsPage() {
 
       <GlassCard>
         <div className="p-6">
-          <div className="mb-3 flex items-center gap-2">
-            <Bell className="h-4 w-4" />
-            <h3 className="font-display text-lg font-semibold">{t("settings.notifications")}</h3>
-          </div>
+          <div className="mb-3 flex items-center gap-2"><Bell className="h-4 w-4" /><h3 className="font-display text-lg font-semibold">{t("settings.notifications")}</h3></div>
           <div className="space-y-2">
-            {[
-              "Critical weather alerts",
-              "Government advisories",
-              "Breaking news",
-              "Preparedness reminders",
-            ].map((label, i) => (
-              <label
-                key={label}
-                className="flex items-center justify-between rounded-2xl border border-glass-border/60 bg-glass px-4 py-3"
-              >
+            {["Critical weather alerts", "Government advisories", "Breaking news", "Preparedness reminders"].map((label, i) => (
+              <label key={label} className="flex items-center justify-between rounded-2xl border border-glass-border/60 bg-glass px-4 py-3">
                 <span className="text-sm">{label}</span>
                 <input type="checkbox" defaultChecked={i < 2} className="h-4 w-4 accent-primary" />
               </label>
@@ -173,10 +133,7 @@ function SettingsPage() {
 
       <GlassCard>
         <div className="p-6">
-          <div className="mb-3 flex items-center gap-2">
-            <LogOut className="h-4 w-4" />
-            <h3 className="font-display text-lg font-semibold">Account</h3>
-          </div>
+          <div className="mb-3 flex items-center gap-2"><LogOut className="h-4 w-4" /><h3 className="font-display text-lg font-semibold">Account</h3></div>
           <button
             onClick={signOut}
             className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-news-breaking/50 px-5 py-3 text-sm font-semibold text-news-breaking transition hover:bg-news-breaking/10"

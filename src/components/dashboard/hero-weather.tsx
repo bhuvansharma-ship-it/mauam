@@ -15,6 +15,7 @@ export function HeroWeather() {
       <div className="relative flex flex-col gap-6 p-6 sm:p-8">
         <WeatherBackdrop condition={w.conditionLabel ?? w.condition} tempC={w.tempF} />
         <div className="relative z-10 flex items-start justify-between gap-4">
+
           <div className="min-w-0">
             <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
               <span>Now in</span>
@@ -41,41 +42,19 @@ export function HeroWeather() {
         </div>
 
         <div className="relative z-10 flex items-end gap-4">
-          <div className="font-display text-7xl font-bold tabular-nums leading-none sm:text-8xl">
-            {w.tempF}°C
-          </div>
+          <div className="font-display text-7xl font-bold tabular-nums leading-none sm:text-8xl">{w.tempF}°C</div>
           <div className="pb-2">
             <div className="text-base font-medium">{w.conditionLabel}</div>
-            <div className="text-sm text-muted-foreground">
-              Feels like {w.feelsLikeF}°C · H {w.high}°C · L {w.low}°C
-            </div>
+            <div className="text-sm text-muted-foreground">Feels like {w.feelsLikeF}°C · H {w.high}°C · L {w.low}°C</div>
           </div>
         </div>
 
         <div className="relative z-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Metric
-            icon={<Droplets className="h-4 w-4" />}
-            label="Humidity"
-            value={`${w.humidity}%`}
-          />
-          <Metric
-            icon={<Wind className="h-4 w-4" />}
-            label="Wind"
-            value={`${w.windMph} km/h ${w.windDir}`}
-          />
+          <Metric icon={<Droplets className="h-4 w-4" />} label="Humidity" value={`${w.humidity}%`} />
+          <Metric icon={<Wind className="h-4 w-4" />} label="Wind" value={`${w.windMph} km/h ${w.windDir}`} />
 
           <Metric icon={<Eye className="h-4 w-4" />} label="UV Index" value={`${w.uv}`} />
-          <Metric
-            icon={<Sunrise className="h-4 w-4" />}
-            label="Sunrise"
-            value={w.sunrise}
-            extra={
-              <>
-                <Sunset className="h-3 w-3" />
-                {w.sunset}
-              </>
-            }
-          />
+          <Metric icon={<Sunrise className="h-4 w-4" />} label="Sunrise" value={w.sunrise} extra={<><Sunset className="h-3 w-3" />{w.sunset}</>} />
         </div>
 
         <div className="relative z-10">
@@ -83,33 +62,18 @@ export function HeroWeather() {
             text={`Current weather in ${w.location}, ${w.region}. ${w.conditionLabel}. Temperature ${w.tempF} degrees Celsius, feels like ${w.feelsLikeF}. High ${w.high}, low ${w.low}. Humidity ${w.humidity} percent. Wind ${w.windMph} kilometers per hour from ${w.windDir}. UV index ${w.uv}.`}
           />
         </div>
+
       </div>
     </GlassCard>
   );
 }
 
-function Metric({
-  icon,
-  label,
-  value,
-  extra,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  extra?: React.ReactNode;
-}) {
+function Metric({ icon, label, value, extra }: { icon: React.ReactNode; label: string; value: string; extra?: React.ReactNode }) {
   return (
     <div className="rounded-2xl border border-glass-border/60 bg-glass p-3">
-      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        {icon} {label}
-      </div>
+      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">{icon} {label}</div>
       <div className="mt-1 font-display text-lg font-semibold tabular-nums">{value}</div>
-      {extra && (
-        <div className="mt-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">
-          {extra}
-        </div>
-      )}
+      {extra && <div className="mt-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">{extra}</div>}
     </div>
   );
 }

@@ -18,10 +18,7 @@ export const Route = createFileRoute("/_authenticated/alerts")({
   head: () => ({
     meta: [
       { title: "Active Alerts — Mausam" },
-      {
-        name: "description",
-        content: "Real-time weather and public-safety alerts for your selected location.",
-      },
+      { name: "description", content: "Real-time weather and public-safety alerts for your selected location." },
       { property: "og:title", content: "Active Alerts — Mausam" },
     ],
   }),
@@ -35,9 +32,7 @@ function AlertsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-          Active alerts
-        </h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Active alerts</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {isLoading
             ? `Loading alerts for ${active.name}…`
@@ -51,8 +46,7 @@ function AlertsPage() {
         </div>
       ) : alerts.length === 0 ? (
         <GlassCard className="p-8 text-center text-sm text-muted-foreground">
-          No active alerts for {active.name} right now. We'll refresh automatically as new
-          advisories are issued.
+          No active alerts for {active.name} right now. We'll refresh automatically as new advisories are issued.
         </GlassCard>
       ) : (
         <div className="grid gap-4">
@@ -64,9 +58,7 @@ function AlertsPage() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-weather-critical/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-weather-critical">
-                      {a.severity}
-                    </span>
+                    <span className="rounded-full bg-weather-critical/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-weather-critical">{a.severity}</span>
                     <h3 className="font-display text-lg font-semibold">{a.title}</h3>
                   </div>
                   <p className="mt-1 text-sm text-muted-foreground">{a.body}</p>

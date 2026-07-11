@@ -1,18 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  Car,
-  CloudRain,
-  Droplets,
-  MapPin,
-  Route as RouteIcon,
-  Snowflake,
-  Sun,
-  Thermometer,
-  Umbrella,
-  Wind,
-  Zap,
-} from "lucide-react";
+import { ArrowRight, Car, CloudRain, Droplets, MapPin, Route as RouteIcon, Snowflake, Sun, Thermometer, Umbrella, Wind, Zap } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { GlassCard } from "../glass-card";
 import { cn } from "../../lib/utils";
@@ -40,20 +27,17 @@ function suggestActions(t: RecentTrip): Suggestion[] {
   const c = t.condition.toLowerCase();
   if (t.level === "danger") s.push({ icon: Zap, text: "Postpone trip if possible" });
   if (/storm|thunder/.test(c)) s.push({ icon: Zap, text: "Avoid open areas; delay travel" });
-  if (/rain|drizzle|shower/.test(c))
-    s.push({ icon: Umbrella, text: "Carry rain gear; drive slowly" });
-  if (/snow|sleet|blizzard/.test(c))
-    s.push({ icon: Snowflake, text: "Use snow tyres; check road closures" });
-  if (/fog|mist|haze/.test(c))
-    s.push({ icon: Droplets, text: "Use low-beam lights; keep distance" });
+  if (/rain|drizzle|shower/.test(c)) s.push({ icon: Umbrella, text: "Carry rain gear; drive slowly" });
+  if (/snow|sleet|blizzard/.test(c)) s.push({ icon: Snowflake, text: "Use snow tyres; check road closures" });
+  if (/fog|mist|haze/.test(c)) s.push({ icon: Droplets, text: "Use low-beam lights; keep distance" });
   if (t.windKph >= 40) s.push({ icon: Wind, text: "High winds — secure loose items" });
   if (t.tempC >= 35) s.push({ icon: Thermometer, text: "Hydrate; avoid midday travel" });
   if (t.tempC <= 5) s.push({ icon: Thermometer, text: "Layer up; watch for icy roads" });
   if (s.length === 0) s.push({ icon: Sun, text: "Clear to travel — enjoy the ride" });
-  if (s.length === 1 && t.level !== "safe")
-    s.push({ icon: CloudRain, text: "Check forecast before departure" });
+  if (s.length === 1 && t.level !== "safe") s.push({ icon: CloudRain, text: "Check forecast before departure" });
   return s.slice(0, 2);
 }
+
 
 export function TravelAdvisory() {
   const { trips } = useRecentTrips();
@@ -95,10 +79,7 @@ export function TravelAdvisory() {
                     <div className="flex min-w-0 items-center gap-1.5 truncate font-medium">
                       <Car className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                       <span className="truncate">{t.from.name}</span>
-                      <ArrowRight
-                        className="h-3 w-3 shrink-0 text-muted-foreground"
-                        aria-hidden="true"
-                      />
+                      <ArrowRight className="h-3 w-3 shrink-0 text-muted-foreground" aria-hidden="true" />
                       <span className="truncate">{t.to.name}</span>
                     </div>
                     <span
@@ -110,14 +91,10 @@ export function TravelAdvisory() {
                       {chipLabel[t.level]}
                     </span>
                   </div>
-                  <div className="mt-1 line-clamp-1 text-xs text-muted-foreground">
-                    {t.headline}
-                  </div>
+                  <div className="mt-1 line-clamp-1 text-xs text-muted-foreground">{t.headline}</div>
                   <div className="mt-1 flex items-center justify-between text-[11px] text-muted-foreground">
                     <span className="inline-flex items-center gap-2">
-                      <span className="font-medium text-foreground">
-                        Dest: {Math.round(t.tempC)}°C · {t.condition}
-                      </span>
+                      <span className="font-medium text-foreground">Dest: {Math.round(t.tempC)}°C · {t.condition}</span>
                       <span className="inline-flex items-center gap-0.5">
                         <Wind className="h-3 w-3" aria-hidden="true" />
                         {Math.round(t.windKph)} km/h
@@ -131,19 +108,14 @@ export function TravelAdvisory() {
                     {suggestActions(t).map((s, i) => {
                       const Icon = s.icon;
                       return (
-                        <li
-                          key={i}
-                          className="flex items-start gap-1.5 text-[11px] text-foreground/80"
-                        >
-                          <Icon
-                            className="mt-0.5 h-3 w-3 shrink-0 text-primary"
-                            aria-hidden="true"
-                          />
+                        <li key={i} className="flex items-start gap-1.5 text-[11px] text-foreground/80">
+                          <Icon className="mt-0.5 h-3 w-3 shrink-0 text-primary" aria-hidden="true" />
                           <span>{s.text}</span>
                         </li>
                       );
                     })}
                   </ul>
+
                 </Link>
               </li>
             ))}

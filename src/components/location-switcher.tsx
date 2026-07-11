@@ -14,12 +14,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import {
-  searchCities,
-  useLocation,
-  type GeoSuggestion,
-  type SavedLocation,
-} from "../lib/locations";
+import { searchCities, useLocation, type GeoSuggestion, type SavedLocation } from "../lib/locations";
 import { weatherFor } from "../lib/mock/weather";
 import { cn } from "../lib/utils";
 
@@ -85,13 +80,7 @@ export function LocationSwitcher() {
   const activeWeather = useMemo(() => weatherFor(active), [active]);
 
   const pickSuggestion = (s: GeoSuggestion) => {
-    void addLocation({
-      name: s.name,
-      region: s.region,
-      country: s.country,
-      lat: s.lat,
-      lon: s.lon,
-    });
+    void addLocation({ name: s.name, region: s.region, country: s.country, lat: s.lat, lon: s.lon });
     setQuery("");
     setSuggestions([]);
     setOpen(false);
@@ -107,9 +96,7 @@ export function LocationSwitcher() {
       >
         <MapPin className="h-4 w-4 text-primary" />
         <span className="hidden sm:block max-w-[160px] truncate font-medium">{active.name}</span>
-        <span className="hidden md:block text-xs text-muted-foreground tabular-nums">
-          {activeWeather.tempF}°
-        </span>
+        <span className="hidden md:block text-xs text-muted-foreground tabular-nums">{activeWeather.tempF}°</span>
       </button>
 
       {open && (
@@ -125,11 +112,7 @@ export function LocationSwitcher() {
                 className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
               />
               {query && (
-                <button
-                  onClick={() => setQuery("")}
-                  aria-label="Clear"
-                  className="text-muted-foreground hover:text-foreground"
-                >
+                <button onClick={() => setQuery("")} aria-label="Clear" className="text-muted-foreground hover:text-foreground">
                   <X className="h-4 w-4" />
                 </button>
               )}
@@ -139,11 +122,7 @@ export function LocationSwitcher() {
               disabled={detecting}
               className="mt-2 flex w-full items-center justify-center gap-2 rounded-full bg-primary/15 px-3 py-2 text-sm font-medium text-primary hover:bg-primary/25 disabled:opacity-60"
             >
-              {detecting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Navigation className="h-4 w-4" />
-              )}
+              {detecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Navigation className="h-4 w-4" />}
               Use my current location
             </button>
             {detectError && <div className="mt-2 text-xs text-destructive">{detectError}</div>}
@@ -157,9 +136,7 @@ export function LocationSwitcher() {
                 </div>
               )}
               {!searching && suggestions.length === 0 && (
-                <div className="px-2 py-3 text-xs text-muted-foreground">
-                  No matches for "{query}".
-                </div>
+                <div className="px-2 py-3 text-xs text-muted-foreground">No matches for "{query}".</div>
               )}
               {suggestions.map((s) => (
                 <button
@@ -256,11 +233,7 @@ function SavedRow(props: {
     >
       <button onClick={onSelect} className="flex min-w-0 flex-1 items-center gap-3 text-left">
         <div className="grid h-9 w-9 place-items-center rounded-xl bg-glass border border-glass-border/60">
-          {isHome ? (
-            <Home className="h-4 w-4 text-primary" />
-          ) : (
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-          )}
+          {isHome ? <Home className="h-4 w-4 text-primary" /> : <MapPin className="h-4 w-4 text-muted-foreground" />}
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
@@ -295,23 +268,11 @@ function SavedRow(props: {
         </div>
       </button>
       <div className="ml-1 flex items-center opacity-0 transition group-hover:opacity-100">
-        <IconBtn
-          label={isHome ? "Home location" : "Set as home"}
-          onClick={onSetHome}
-          active={isHome}
-        >
+        <IconBtn label={isHome ? "Home location" : "Set as home"} onClick={onSetHome} active={isHome}>
           <Star className={cn("h-3.5 w-3.5", isHome && "fill-current")} />
         </IconBtn>
-        <IconBtn
-          label={loc.notifications ? "Mute alerts" : "Enable alerts"}
-          onClick={onToggleNotif}
-          active={!!loc.notifications}
-        >
-          {loc.notifications ? (
-            <Bell className="h-3.5 w-3.5" />
-          ) : (
-            <BellOff className="h-3.5 w-3.5" />
-          )}
+        <IconBtn label={loc.notifications ? "Mute alerts" : "Enable alerts"} onClick={onToggleNotif} active={!!loc.notifications}>
+          {loc.notifications ? <Bell className="h-3.5 w-3.5" /> : <BellOff className="h-3.5 w-3.5" />}
         </IconBtn>
         <IconBtn label="Rename" onClick={onStartRename}>
           <Pencil className="h-3.5 w-3.5" />

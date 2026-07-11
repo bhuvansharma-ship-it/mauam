@@ -54,13 +54,7 @@ export const fetchTravelAdvisory = createServerFn({ method: "POST" })
     const res = await fetch(url);
     if (!res.ok) throw new Error("Weather service unavailable");
     const j = (await res.json()) as {
-      current: {
-        temperature_2m: number;
-        weather_code: number;
-        wind_speed_10m: number;
-        wind_gusts_10m: number;
-        precipitation: number;
-      };
+      current: { temperature_2m: number; weather_code: number; wind_speed_10m: number; wind_gusts_10m: number; precipitation: number };
       daily: {
         time: string[];
         temperature_2m_max: number[];

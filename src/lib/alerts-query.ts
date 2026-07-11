@@ -12,17 +12,9 @@ function toAlertSeverity(s: Article["severity"]): Severity {
 }
 
 const ALERT_CATEGORIES = new Set<Article["category"]>([
-  "Floods",
-  "Cyclones",
-  "Heatwaves",
-  "Storms",
-  "Landslides",
-  "Earthquakes",
-  "Wildfires",
-  "Public Safety",
-  "Health Advisories",
-  "Government Alerts",
-  "Weather",
+  "Floods", "Cyclones", "Heatwaves", "Storms", "Landslides",
+  "Earthquakes", "Wildfires", "Public Safety", "Health Advisories",
+  "Government Alerts", "Weather",
 ]);
 
 export function alertsQueryOptions(location: SavedLocation) {

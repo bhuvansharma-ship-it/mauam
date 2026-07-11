@@ -53,11 +53,7 @@ export function AIAssistant() {
             lat: active.lat,
             lon: active.lon,
             label: active.label,
-            savedLocations: locations.map((l) => ({
-              name: l.name,
-              region: l.region,
-              label: l.label,
-            })),
+            savedLocations: locations.map((l) => ({ name: l.name, region: l.region, label: l.label })),
           },
         },
       }),
@@ -126,10 +122,7 @@ export function AIAssistant() {
           </div>
         </div>
 
-        <div
-          ref={scrollRef}
-          className="flex-1 space-y-2 overflow-y-auto pr-1 min-h-[160px] max-h-[260px]"
-        >
+        <div ref={scrollRef} className="flex-1 space-y-2 overflow-y-auto pr-1 min-h-[160px] max-h-[260px]">
           {messages.map((m) => (
             <ChatBubble key={m.id} message={m} pending={isLoading} />
           ))}
@@ -172,9 +165,7 @@ export function AIAssistant() {
             aria-label={listening ? "Stop listening" : "Start voice input"}
             className={
               "grid h-8 w-8 place-items-center rounded-full border border-glass-border/60 " +
-              (listening
-                ? "bg-destructive text-destructive-foreground animate-pulse"
-                : "hover:bg-accent/20")
+              (listening ? "bg-destructive text-destructive-foreground animate-pulse" : "hover:bg-accent/20")
             }
           >
             {listening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}

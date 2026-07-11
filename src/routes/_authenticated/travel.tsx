@@ -8,22 +8,14 @@ import { useLocation } from "../../lib/locations";
 import { fetchTravelAdvisory } from "../../lib/travel.functions";
 import { cn } from "../../lib/utils";
 import { CityPicker, type Point } from "../../components/travel/city-picker";
-import {
-  AdvisorySummary,
-  DestinationWeather,
-  DailyOutlook,
-} from "../../components/travel/advisory-panels";
+import { AdvisorySummary, DestinationWeather, DailyOutlook } from "../../components/travel/advisory-panels";
 import { useRecentTrips } from "../../hooks/use-recent-trips";
 
 export const Route = createFileRoute("/_authenticated/travel")({
   head: () => ({
     meta: [
       { title: "Travel Advisory — Mausam" },
-      {
-        name: "description",
-        content:
-          "Pick your origin and destination and get a real-time, weather-based travel advisory.",
-      },
+      { name: "description", content: "Pick your origin and destination and get a real-time, weather-based travel advisory." },
       { property: "og:title", content: "Travel Advisory — Mausam" },
     ],
   }),
@@ -33,11 +25,7 @@ export const Route = createFileRoute("/_authenticated/travel")({
 function TravelPage() {
   const { active } = useLocation();
   const [from, setFrom] = useState<Point | null>(() => ({
-    name: active.name,
-    region: active.region,
-    country: active.country,
-    lat: active.lat,
-    lon: active.lon,
+    name: active.name, region: active.region, country: active.country, lat: active.lat, lon: active.lon,
   }));
   const [to, setTo] = useState<Point | null>(null);
 
@@ -49,21 +37,14 @@ function TravelPage() {
   });
 
   const canCheck = from && to && !(from.lat === to.lat && from.lon === to.lon);
-  const swap = () => {
-    const f = from;
-    setFrom(to);
-    setTo(f);
-  };
+  const swap = () => { const f = from; setFrom(to); setTo(f); };
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-          Travel advisory
-        </h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Travel advisory</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Pick where you're going. We'll check the weather at your destination and tell you if it's
-          safe to travel.
+          Pick where you're going. We'll check the weather at your destination and tell you if it's safe to travel.
         </p>
       </div>
 
@@ -102,11 +83,7 @@ function TravelPage() {
               (!canCheck || mut.isPending) && "cursor-not-allowed opacity-50",
             )}
           >
-            {mut.isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-            ) : (
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            )}
+            {mut.isPending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <ArrowRight className="h-4 w-4" aria-hidden="true" />}
             Check advisory
           </button>
         </div>

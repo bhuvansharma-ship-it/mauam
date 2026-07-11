@@ -1,20 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import {
-  Bell,
-  Bookmark,
-  CloudSun,
-  ListChecks,
-  LogOut,
-  Menu,
-  MoonStar,
-  Navigation,
-  Newspaper,
-  Settings,
-  ShieldAlert,
-  Sun,
-  User,
-  X,
-} from "lucide-react";
+import { Bell, Bookmark, CloudSun, ListChecks, LogOut, Menu, MoonStar, Navigation, Newspaper, Settings, ShieldAlert, Sun, User, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "./theme-provider";
@@ -25,6 +10,7 @@ import { newsQueryOptions } from "../lib/news-query";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "../lib/utils";
 
+
 const NAV = [
   { to: "/", key: "dashboard", icon: CloudSun },
   { to: "/news", key: "news", icon: Newspaper },
@@ -34,6 +20,7 @@ const NAV = [
   { to: "/bookmarks", key: "saved", icon: Bookmark },
   { to: "/settings", key: "settings", icon: Settings },
 ] as const;
+
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -58,11 +45,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             aria-expanded={open}
             aria-controls="mobile-nav"
           >
-            {open ? (
-              <X className="h-5 w-5" aria-hidden="true" />
-            ) : (
-              <Menu className="h-5 w-5" aria-hidden="true" />
-            )}
+            {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
 
           <Link
@@ -71,10 +54,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="flex items-center gap-2"
             aria-label="Mausam home"
           >
-            <div
-              className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg"
-              aria-hidden="true"
-            >
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg" aria-hidden="true">
               <CloudSun className="h-5 w-5 text-primary-foreground" />
             </div>
             <div className="font-display text-lg font-bold tracking-tight">Mausam</div>
@@ -109,32 +89,19 @@ export function AppShell({ children }: { children: ReactNode }) {
               className="grid h-11 w-11 place-items-center rounded-full border border-glass-border/70 bg-glass transition hover:bg-accent/20"
               aria-label={`Switch to ${resolved === "dark" ? "light" : "dark"} theme`}
             >
-              {resolved === "dark" ? (
-                <Sun className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <MoonStar className="h-4 w-4" aria-hidden="true" />
-              )}
+              {resolved === "dark" ? <Sun className="h-4 w-4" aria-hidden="true" /> : <MoonStar className="h-4 w-4" aria-hidden="true" />}
             </button>
-            <button
-              className="relative grid h-11 w-11 place-items-center rounded-full border border-glass-border/70 bg-glass transition hover:bg-accent/20"
-              aria-label="Notifications (1 new)"
-            >
+            <button className="relative grid h-11 w-11 place-items-center rounded-full border border-glass-border/70 bg-glass transition hover:bg-accent/20" aria-label="Notifications (1 new)">
               <Bell className="h-4 w-4" aria-hidden="true" />
-              <span
-                className="absolute right-2 top-2 h-2 w-2 rounded-full bg-weather-critical animate-pulse-alert"
-                aria-hidden="true"
-              />
+              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-weather-critical animate-pulse-alert" aria-hidden="true" />
             </button>
             <UserMenu />
           </div>
         </div>
 
+
         {open && (
-          <nav
-            id="mobile-nav"
-            className="border-t border-glass-border/60 px-4 pb-3 pt-2 lg:hidden"
-            aria-label="Mobile primary"
-          >
+          <nav id="mobile-nav" className="border-t border-glass-border/60 px-4 pb-3 pt-2 lg:hidden" aria-label="Mobile primary">
             <div className="grid grid-cols-2 gap-1.5">
               {NAV.map(({ to, key, icon: Icon }) => {
                 const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
@@ -161,17 +128,10 @@ export function AppShell({ children }: { children: ReactNode }) {
         <BreakingTicker />
       </header>
 
-      <main
-        id="main-content"
-        tabIndex={-1}
-        className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:py-8"
-      >
-        {children}
-      </main>
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:py-8">{children}</main>
 
       <footer className="mx-auto max-w-[1440px] px-4 py-8 text-center text-xs text-muted-foreground sm:px-6">
-        Mausam · Sample data for demonstration. Always follow official guidance from local
-        authorities during emergencies.
+        Mausam · Sample data for demonstration. Always follow official guidance from local authorities during emergencies.
       </footer>
     </div>
   );
@@ -180,9 +140,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 function BreakingTicker() {
   const { active } = useLocation();
   const query = useQuery(newsQueryOptions({ location: active }));
-  const items = (query.data ?? [])
-    .filter((n) => n.severity === "breaking" || n.severity === "critical")
-    .slice(0, 8);
+  const items = (query.data ?? []).filter((n) => n.severity === "breaking" || n.severity === "critical").slice(0, 8);
   if (!items.length) return null;
   return (
     <div
@@ -220,11 +178,7 @@ function UserMenu() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [profile, setProfile] = useState<{
-    display_name: string | null;
-    avatar_url: string | null;
-    email: string | null;
-  }>({ display_name: null, avatar_url: null, email: null });
+  const [profile, setProfile] = useState<{ display_name: string | null; avatar_url: string | null; email: string | null }>({ display_name: null, avatar_url: null, email: null });
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -232,28 +186,15 @@ function UserMenu() {
       const { data } = await supabase.auth.getUser();
       const email = data.user?.email ?? null;
       const uid = data.user?.id;
-      if (!uid) {
-        setProfile({ display_name: null, avatar_url: null, email });
-        return;
-      }
-      const { data: p } = await supabase
-        .from("profiles")
-        .select("display_name,avatar_url")
-        .eq("id", uid)
-        .maybeSingle();
-      setProfile({
-        display_name: p?.display_name ?? null,
-        avatar_url: p?.avatar_url ?? null,
-        email,
-      });
+      if (!uid) { setProfile({ display_name: null, avatar_url: null, email }); return; }
+      const { data: p } = await supabase.from("profiles").select("display_name,avatar_url").eq("id", uid).maybeSingle();
+      setProfile({ display_name: p?.display_name ?? null, avatar_url: p?.avatar_url ?? null, email });
     })();
   }, []);
 
   useEffect(() => {
     if (!open) return;
-    const onDown = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
+    const onDown = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
     document.addEventListener("mousedown", onDown);
     return () => document.removeEventListener("mousedown", onDown);
   }, [open]);
@@ -276,24 +217,16 @@ function UserMenu() {
         aria-label="Account menu"
       >
         {profile.avatar_url ? (
-          <img
-            src={profile.avatar_url}
-            alt=""
-            className="h-full w-full rounded-full object-cover"
-          />
+          <img src={profile.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
         ) : (
-          <span className="bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent">
-            {initial}
-          </span>
+          <span className="bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent">{initial}</span>
         )}
       </button>
       {open && (
         <div className="absolute right-0 top-12 z-50 w-64 overflow-hidden rounded-2xl border border-glass-border/60 bg-background/95 shadow-2xl backdrop-blur-xl">
           <div className="border-b border-glass-border/60 p-4">
             <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-primary to-accent font-display text-base font-bold text-primary-foreground">
-                {initial}
-              </div>
+              <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-primary to-accent font-display text-base font-bold text-primary-foreground">{initial}</div>
               <div className="min-w-0">
                 <div className="truncate font-display text-sm font-semibold">{name}</div>
                 <div className="truncate text-[11px] text-muted-foreground">{profile.email}</div>
@@ -301,17 +234,10 @@ function UserMenu() {
             </div>
           </div>
           <div className="p-1.5">
-            <Link
-              to="/settings"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-accent/20"
-            >
+            <Link to="/settings" onClick={() => setOpen(false)} className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-accent/20">
               <User className="h-4 w-4" /> Account & settings
             </Link>
-            <button
-              onClick={signOut}
-              className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-news-breaking hover:bg-news-breaking/10"
-            >
+            <button onClick={signOut} className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-news-breaking hover:bg-news-breaking/10">
               <LogOut className="h-4 w-4" /> Sign out
             </button>
           </div>
