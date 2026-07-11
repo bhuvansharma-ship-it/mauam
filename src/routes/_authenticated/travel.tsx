@@ -87,8 +87,8 @@ function TravelPage() {
       </GlassCard>
 
       {mut.isError && (
-        <GlassCard className="border-weather-critical/40 p-4 text-sm text-weather-critical" role="alert">
-          Couldn't fetch weather for that destination. Please try again.
+        <GlassCard className="border-weather-critical/40 p-4 text-sm text-weather-critical">
+          <div role="alert">Couldn't fetch weather for that destination. Please try again.</div>
         </GlassCard>
       )}
 
