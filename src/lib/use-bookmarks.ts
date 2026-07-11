@@ -23,7 +23,9 @@ export function useBookmarks() {
     try {
       const raw = localStorage.getItem(KEY);
       if (raw) setIds(JSON.parse(raw));
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     setStore(readStore());
   }, []);
 
@@ -31,14 +33,18 @@ export function useBookmarks() {
     setIds(next);
     try {
       localStorage.setItem(KEY, JSON.stringify(next));
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   };
 
   const persistStore = (next: Store) => {
     setStore(next);
     try {
       localStorage.setItem(KEY_PAYLOAD, JSON.stringify(next));
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   };
 
   const toggle = useCallback((id: string, article?: Article) => {
@@ -47,13 +53,17 @@ export function useBookmarks() {
       const next = has ? prev.filter((i) => i !== id) : [...prev, id];
       try {
         localStorage.setItem(KEY, JSON.stringify(next));
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
       const current = readStore();
       if (has) delete current[id];
       else if (article) current[id] = article;
       try {
         localStorage.setItem(KEY_PAYLOAD, JSON.stringify(current));
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
       setStore(current);
       return next;
     });
