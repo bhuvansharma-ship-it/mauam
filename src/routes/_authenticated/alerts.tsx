@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ShieldAlert } from "lucide-react";
-import { alerts } from "../lib/mock/alerts";
-import { GlassCard } from "../components/glass-card";
-import { timeAgo } from "../lib/format-time";
-import { cn } from "../lib/utils";
+import { alerts } from "../../lib/mock/alerts";
+import { GlassCard } from "../../components/glass-card";
+import { timeAgo } from "../../lib/format-time";
+import { cn } from "../../lib/utils";
 
 const style = {
   critical: "border-weather-critical/50",

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { faq } from "../lib/mock/emergency";
-import { GlassCard } from "../components/glass-card";
+import { faq } from "../../lib/mock/emergency";
+import { GlassCard } from "../../components/glass-card";
 import { BookOpen } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/knowledge")({
