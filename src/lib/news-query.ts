@@ -23,8 +23,10 @@ export function newsQueryOptions(params: {
           location: { name: loc.name, region: loc.region, country: loc.country },
         },
       }),
-    staleTime: 60_000,
-    refetchInterval: 90_000,
-    refetchOnWindowFocus: true,
+    staleTime: 5 * 60_000,     // treat news as fresh for 5 min
+    gcTime: 30 * 60_000,       // keep cached feeds for 30 min after unmount
+    refetchInterval: 5 * 60_000, // background refresh every 5 min (was 90s)
+    refetchOnWindowFocus: false, // avoid a network hit on every tab focus
+    refetchOnReconnect: true,
   });
 }
