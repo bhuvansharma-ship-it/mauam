@@ -22,9 +22,19 @@ function SettingsPage() {
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
   const { active, homeId, setHome, locations } = useLocation();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const displayName = [active.label, active.name, active.region].filter(Boolean).join(" · ");
   const isHome = active.id === homeId;
   const currentLang = (i18n.language as LangCode) || "en";
+
+  const signOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  };
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
