@@ -30,12 +30,21 @@ export function NewsCard({ article, size = "md" }: { article: Article; size?: "s
           <SeverityBadge severity={article.severity} />
           <span className="rounded-full bg-accent/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-accent-foreground">{article.category}</span>
         </div>
-        <Link to="/news/$slug" params={{ slug: article.slug }} className="block">
-          <h3 className={cn(
-            "font-display font-semibold leading-tight tracking-tight transition group-hover:text-primary",
-            size === "lg" ? "text-2xl sm:text-3xl" : size === "sm" ? "text-sm" : "text-lg",
-          )}>{article.headline}</h3>
-        </Link>
+        {article.url ? (
+          <a href={article.url} target="_blank" rel="noopener noreferrer" className="block">
+            <h3 className={cn(
+              "font-display font-semibold leading-tight tracking-tight transition group-hover:text-primary",
+              size === "lg" ? "text-2xl sm:text-3xl" : size === "sm" ? "text-sm" : "text-lg",
+            )}>{article.headline}</h3>
+          </a>
+        ) : (
+          <Link to="/news/$slug" params={{ slug: article.slug }} className="block">
+            <h3 className={cn(
+              "font-display font-semibold leading-tight tracking-tight transition group-hover:text-primary",
+              size === "lg" ? "text-2xl sm:text-3xl" : size === "sm" ? "text-sm" : "text-lg",
+            )}>{article.headline}</h3>
+          </Link>
+        )}
         {size !== "sm" && <p className="line-clamp-2 text-sm text-muted-foreground">{article.summary}</p>}
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
           <SourceBadge source={article.source} />
