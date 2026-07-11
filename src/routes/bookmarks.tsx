@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Bookmark } from "lucide-react";
-import { articles } from "../lib/mock/news";
 import { useBookmarks } from "../lib/use-bookmarks";
 import { NewsCard } from "../components/news/news-card";
 
@@ -16,8 +15,8 @@ export const Route = createFileRoute("/bookmarks")({
 });
 
 function BookmarksPage() {
-  const { ids } = useBookmarks();
-  const saved = articles.filter((a) => ids.includes(a.id));
+  const { articles } = useBookmarks();
+  const saved = articles();
   return (
     <div className="space-y-6">
       <div>

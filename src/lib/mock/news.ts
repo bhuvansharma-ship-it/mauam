@@ -21,7 +21,10 @@ export type Article = {
   image: { hue: number; icon: "storm" | "flood" | "fire" | "heat" | "quake" | "wind" | "health" | "road" | "gov" };
   trending?: boolean;
   pinned?: boolean;
+  url?: string;
+  sourceUrl?: string;
 };
+
 
 const S = {
   nws: { name: "National Weather Service", verified: true, official: true },

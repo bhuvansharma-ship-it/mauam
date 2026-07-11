@@ -30,12 +30,21 @@ export function NewsCard({ article, size = "md" }: { article: Article; size?: "s
           <SeverityBadge severity={article.severity} />
           <span className="rounded-full bg-accent/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-accent-foreground">{article.category}</span>
         </div>
-        <Link to="/news/$slug" params={{ slug: article.slug }} className="block">
-          <h3 className={cn(
-            "font-display font-semibold leading-tight tracking-tight transition group-hover:text-primary",
-            size === "lg" ? "text-2xl sm:text-3xl" : size === "sm" ? "text-sm" : "text-lg",
-          )}>{article.headline}</h3>
-        </Link>
+        {article.url ? (
+          <a href={article.url} target="_blank" rel="noopener noreferrer" className="block">
+            <h3 className={cn(
+              "font-display font-semibold leading-tight tracking-tight transition group-hover:text-primary",
+              size === "lg" ? "text-2xl sm:text-3xl" : size === "sm" ? "text-sm" : "text-lg",
+            )}>{article.headline}</h3>
+          </a>
+        ) : (
+          <Link to="/news/$slug" params={{ slug: article.slug }} className="block">
+            <h3 className={cn(
+              "font-display font-semibold leading-tight tracking-tight transition group-hover:text-primary",
+              size === "lg" ? "text-2xl sm:text-3xl" : size === "sm" ? "text-sm" : "text-lg",
+            )}>{article.headline}</h3>
+          </Link>
+        )}
         {size !== "sm" && <p className="line-clamp-2 text-sm text-muted-foreground">{article.summary}</p>}
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
           <SourceBadge source={article.source} />
@@ -43,7 +52,7 @@ export function NewsCard({ article, size = "md" }: { article: Article; size?: "s
           <span className="text-muted-foreground">· {timeAgo(article.publishedAt)}</span>
           <div className="ml-auto flex items-center gap-1">
             <button
-              onClick={(e) => { e.preventDefault(); toggle(article.id); }}
+              onClick={(e) => { e.preventDefault(); toggle(article.id, article); }}
               className="grid h-8 w-8 place-items-center rounded-full hover:bg-accent/20"
               aria-label="Bookmark"
             >
@@ -64,8 +73,8 @@ export function NewsCard({ article, size = "md" }: { article: Article; size?: "s
 }
 
 export function NewsCardCompact({ article }: { article: Article }) {
-  return (
-    <Link to="/news/$slug" params={{ slug: article.slug }} className="group flex gap-3 rounded-2xl border border-glass-border/50 bg-glass p-2.5 transition hover:border-primary/40">
+  const inner = (
+    <>
       <NewsImage article={article} className="h-20 w-24 shrink-0 rounded-xl" />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-center gap-1.5">
@@ -75,7 +84,13 @@ export function NewsCardCompact({ article }: { article: Article }) {
         <div className="line-clamp-2 text-sm font-semibold leading-snug group-hover:text-primary">{article.headline}</div>
         <SourceBadge source={article.source} />
       </div>
-    </Link>
+    </>
+  );
+  const cls = "group flex gap-3 rounded-2xl border border-glass-border/50 bg-glass p-2.5 transition hover:border-primary/40";
+  return article.url ? (
+    <a href={article.url} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
+  ) : (
+    <Link to="/news/$slug" params={{ slug: article.slug }} className={cls}>{inner}</Link>
   );
 }
 
