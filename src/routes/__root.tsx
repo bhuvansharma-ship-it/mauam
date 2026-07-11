@@ -13,6 +13,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeProvider } from "../components/theme-provider";
 import { supabase } from "@/integrations/supabase/client";
+import "../lib/i18n";
+import { applyDocumentLangDir } from "../lib/i18n";
 
 
 function NotFoundComponent() {
@@ -155,6 +157,7 @@ function RootComponent() {
   const router = useRouter();
 
   useEffect(() => {
+    applyDocumentLangDir();
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       router.invalidate();
