@@ -4,6 +4,7 @@ import { WeatherIcon } from "../weather-icons/weather-icon";
 import { weatherFor } from "../../lib/mock/weather";
 import { useLocation } from "../../lib/locations";
 import { useMemo } from "react";
+import { ReadAloudButton } from "../read-aloud-button";
 
 export function HeroWeather() {
   const { active, refreshTick, refresh } = useLocation();
