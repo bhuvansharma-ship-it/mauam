@@ -48,6 +48,11 @@ function NewsPage() {
     newsQueryOptions({ location: active, category: search.category, q: search.q }),
   );
 
+  // Sidebar/breaking sections pull from ALL categories, independent of filters
+  const allQuery = useQuery(
+    newsQueryOptions({ location: active, category: "All", q: "" }),
+  );
+
   const filtered = useMemo(() => {
     const list = query.data ?? [];
     return list
@@ -55,12 +60,18 @@ function NewsPage() {
       .sort((a, b) => +new Date(b.publishedAt) - +new Date(a.publishedAt));
   }, [query.data, search.severity]);
 
-  const breaking = filtered.filter((a) => a.severity === "breaking").slice(0, 3);
+  const allSorted = useMemo(() => {
+    const list = allQuery.data ?? [];
+    return [...list].sort((a, b) => +new Date(b.publishedAt) - +new Date(a.publishedAt));
+  }, [allQuery.data]);
+
+  const breaking = allSorted.filter((a) => a.severity === "breaking").slice(0, 3);
   const featured = filtered[0];
   const feed = filtered.slice(1, pageSize);
-  const trending = filtered.filter((a) => a.trending).slice(0, 6);
-  const bulletins = filtered.filter((a) => a.source.official).slice(0, 4);
-  const timeline = filtered.slice(0, 8);
+  const trending = allSorted.filter((a) => a.trending).slice(0, 6);
+  const bulletins = allSorted.filter((a) => a.source.official).slice(0, 4);
+  const timeline = allSorted.slice(0, 8);
+
 
   type S = z.infer<typeof searchSchema>;
   const setCategory = (c: string) => navigate({ search: (p: S) => ({ ...p, category: c }) });
