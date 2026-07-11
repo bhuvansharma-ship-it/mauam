@@ -98,7 +98,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         {open && (
           <nav id="mobile-nav" className="border-t border-glass-border/60 px-4 pb-3 pt-2 lg:hidden" aria-label="Mobile primary">
             <div className="grid grid-cols-2 gap-1.5">
-              {NAV.map(({ to, label, icon: Icon }) => {
+              {NAV.map(({ to, key, icon: Icon }) => {
                 const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
                 return (
                   <Link
@@ -112,7 +112,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     )}
                   >
                     <Icon className="h-4 w-4" aria-hidden="true" />
-                    {label}
+                    {t(`nav.${key}`)}
                   </Link>
                 );
               })}
