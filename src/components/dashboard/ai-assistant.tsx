@@ -222,7 +222,7 @@ export function AIAssistant() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={listening ? "Listening…" : "Ask Aurora about your safety…"}
+            placeholder={listening ? "Listening…" : "Ask about preparedness or your checklist…"}
             className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
           <button
