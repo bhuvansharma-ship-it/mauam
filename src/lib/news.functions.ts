@@ -123,9 +123,16 @@ export const fetchNews = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<Article[]> => {
     const { category, q, location } = data;
     const loc = locale(location.country);
-    const keywords = q.trim() || CATEGORY_KEYWORDS[category];
     const geo = [location.name, location.region].filter(Boolean).join(" ");
-    const query = `(${keywords}) (${geo})`;
+    // For "All" without a search term, fetch top geo-scoped headlines rather
+    // than AND-ing every disaster keyword — that was returning empty for many
+    // locations. A plain geo query surfaces the location's top stories.
+    const query =
+      q.trim()
+        ? `(${q.trim()}) (${geo})`
+        : category === "All"
+          ? geo || CATEGORY_KEYWORDS["All"]
+          : `(${CATEGORY_KEYWORDS[category]}) (${geo})`;
     const cacheKey = `${loc.gl}|${category}|${q}|${geo}`;
 
     const cached = cache.get(cacheKey);
