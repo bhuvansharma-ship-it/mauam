@@ -3,7 +3,7 @@ import { GlassCard } from "../components/glass-card";
 import { useTheme } from "../components/theme-provider";
 import { MapPin, MoonStar, Sun, Monitor, Bell } from "lucide-react";
 
-export const Route = createFileRoute("/settings")({
+export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
       { title: "Settings — Aurora Guardian" },

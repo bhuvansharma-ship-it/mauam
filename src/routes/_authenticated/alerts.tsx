@@ -12,7 +12,7 @@ const style = {
   info: "border-weather-rain/40",
 } as const;
 
-export const Route = createFileRoute("/alerts")({
+export const Route = createFileRoute("/_authenticated/alerts")({
   head: () => ({
     meta: [
       { title: "Active Alerts — Aurora Guardian" },

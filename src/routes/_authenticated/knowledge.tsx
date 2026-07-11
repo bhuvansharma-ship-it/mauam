@@ -3,7 +3,7 @@ import { faq } from "../lib/mock/emergency";
 import { GlassCard } from "../components/glass-card";
 import { BookOpen } from "lucide-react";
 
-export const Route = createFileRoute("/knowledge")({
+export const Route = createFileRoute("/_authenticated/knowledge")({
   head: () => ({
     meta: [
       { title: "Knowledge Hub — Aurora Guardian" },

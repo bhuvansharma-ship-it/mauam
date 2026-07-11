@@ -14,7 +14,7 @@ import { Notifications } from "../components/dashboard/notifications";
 import { LatestNewsWidget } from "../components/dashboard/latest-news-widget";
 import { KnowledgeHub } from "../components/dashboard/knowledge-hub";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
   component: Dashboard,
 });
 
