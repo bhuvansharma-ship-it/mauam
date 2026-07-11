@@ -87,6 +87,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Real-time weather, emergency preparedness, and verified public-safety news in one calm, beautiful dashboard.",
       },
       { name: "author", content: "Mausam" },
+      { name: "theme-color", content: "#0f172a" },
+      { property: "og:site_name", content: "Mausam" },
       { property: "og:title", content: "Mausam — Weather, Emergency & News" },
       {
         property: "og:description",
@@ -97,8 +99,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Mausam — Weather, Emergency & News" },
       { name: "twitter:description", content: "Real-time weather, emergency preparedness, and verified public-safety news in one calm, beautiful dashboard." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/00b364fa-3c06-4a33-b3ff-7623d2c8f8c5" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/00b364fa-3c06-4a33-b3ff-7623d2c8f8c5" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -108,6 +108,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Mausam",
+          url: "https://mauam.lovable.app",
+          description:
+            "Real-time weather, emergency preparedness, and verified public-safety news in one calm, beautiful dashboard.",
+        }),
       },
     ],
   }),

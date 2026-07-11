@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /auth
+Disallow: /alerts
+Disallow: /bookmarks
+Disallow: /checklist
+Disallow: /knowledge
+Disallow: /map
+Disallow: /news
+Disallow: /settings
+Disallow: /travel
+
+Sitemap: https://mauam.lovable.app/sitemap.xml
