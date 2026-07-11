@@ -42,7 +42,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg">
               <CloudSun className="h-5 w-5 text-primary-foreground" />
             </div>
-            <div className="font-display text-lg font-bold tracking-tight">Aurora<span className="text-accent">Guardian</span></div>
+            <div className="font-display text-lg font-bold tracking-tight">Mausam</div>
           </Link>
 
           <nav className="ml-6 hidden items-center gap-1 lg:flex">
@@ -114,7 +114,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <main className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:py-8">{children}</main>
 
       <footer className="mx-auto max-w-[1440px] px-4 py-8 text-center text-xs text-muted-foreground sm:px-6">
-        Aurora Guardian · Sample data for demonstration. Always follow official guidance from local authorities during emergencies.
+        Mausam · Sample data for demonstration. Always follow official guidance from local authorities during emergencies.
       </footer>
     </div>
   );

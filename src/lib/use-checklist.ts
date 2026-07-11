@@ -1,7 +1,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { initialChecklist, type ChecklistItem } from "./mock/emergency";
 
-const STORAGE_KEY = "aurora.checklist.v1";
+const STORAGE_KEY = "mausam.checklist.v1";
 
 type State = ChecklistItem[];
 

@@ -39,7 +39,7 @@ export function AIAssistant() {
         parts: [
           {
             type: "text",
-            text: `I'm Aurora — your emergency assistant, tuned to ${active.name}${
+            text: `I'm Mausam — your emergency assistant, tuned to ${active.name}${
               active.label ? ` (${active.label})` : ""
             }. Ask about alerts, checklists, evacuation routes, first aid, or shelter locations. You can type or tap the mic to talk.`,
           },
@@ -166,7 +166,7 @@ export function AIAssistant() {
             <h3 className="font-display text-base font-semibold">AI Emergency Assistant</h3>
             <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
               {isLoading ? (
-                "Aurora is thinking…"
+                "Mausam is thinking…"
               ) : (
                 <>
                   <MapPin className="h-3 w-3" /> {active.name} · Voice + text

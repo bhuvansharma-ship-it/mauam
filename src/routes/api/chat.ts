@@ -3,7 +3,7 @@ import { ChatBodySchema } from "@/lib/chat-validation";
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 
-const SYSTEM_PROMPT = `You are Aurora, an AI **preparedness coach** inside a disaster-awareness dashboard.
+const SYSTEM_PROMPT = `You are Mausam, an AI **preparedness coach** inside a disaster-awareness dashboard.
 
 Your ONLY scope is emergency preparedness and the user's preparedness checklist:
 - Personalized preparedness plans for the user's location, household, and hazard profile (floods, cyclones, storms, heatwaves, wildfires, earthquakes, power outages, pandemics).

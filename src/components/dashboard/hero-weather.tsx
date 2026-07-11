@@ -9,7 +9,7 @@ export function HeroWeather() {
   const { active, refreshTick, refresh } = useLocation();
   const w = useMemo(() => weatherFor(active), [active, refreshTick]);
   return (
-    <GlassCard className="aurora-bg col-span-12 lg:col-span-8 xl:col-span-8" glow="primary">
+    <GlassCard className="mausam-bg col-span-12 lg:col-span-8 xl:col-span-8" glow="primary">
       <div className="relative flex flex-col gap-6 p-6 sm:p-8">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">

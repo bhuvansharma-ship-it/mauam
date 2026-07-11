@@ -6,9 +6,9 @@ import { BookOpen } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/knowledge")({
   head: () => ({
     meta: [
-      { title: "Knowledge Hub — Aurora Guardian" },
+      { title: "Knowledge Hub — Mausam" },
       { name: "description", content: "Illustrated safety guides for earthquakes, floods, wildfires, storms and more." },
-      { property: "og:title", content: "Knowledge Hub — Aurora Guardian" },
+      { property: "og:title", content: "Knowledge Hub — Mausam" },
     ],
   }),
   component: () => (

@@ -11,9 +11,9 @@ import { cn } from "../../lib/utils";
 export const Route = createFileRoute("/_authenticated/travel")({
   head: () => ({
     meta: [
-      { title: "Travel Advisory — Aurora Guardian" },
+      { title: "Travel Advisory — Mausam" },
       { name: "description", content: "Pick your origin and destination and get a real-time, weather-based travel advisory." },
-      { property: "og:title", content: "Travel Advisory — Aurora Guardian" },
+      { property: "og:title", content: "Travel Advisory — Mausam" },
     ],
   }),
   component: TravelPage,

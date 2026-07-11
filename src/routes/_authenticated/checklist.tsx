@@ -5,9 +5,9 @@ import { PreparednessScore } from "../../components/dashboard/preparedness-score
 export const Route = createFileRoute("/_authenticated/checklist")({
   head: () => ({
     meta: [
-      { title: "Emergency Preparedness Checklist — Aurora Guardian" },
+      { title: "Emergency Preparedness Checklist — Mausam" },
       { name: "description", content: "Build your emergency preparedness step by step." },
-      { property: "og:title", content: "Emergency Preparedness Checklist — Aurora Guardian" },
+      { property: "og:title", content: "Emergency Preparedness Checklist — Mausam" },
     ],
   }),
   component: () => (
