@@ -21,7 +21,7 @@ describe("useChecklist", () => {
     const after = result.current.items.find((x) => x.id === first.id)!;
     expect(after.done).toBe(!originally);
 
-    const stored = JSON.parse(window.localStorage.getItem("aurora.checklist.v1") ?? "[]");
+    const stored = JSON.parse(window.localStorage.getItem("mausam.checklist.v1") ?? "[]");
     expect(Array.isArray(stored)).toBe(true);
   });
 

@@ -78,7 +78,7 @@ function AuthPage() {
           <p className="mt-1 text-sm text-muted-foreground">
             {mode === "signin"
               ? "Sign in to see weather, alerts, and news for your saved locations."
-              : "Set up your Aurora dashboard in seconds."}
+              : "Set up your Mausam dashboard in seconds."}
           </p>
 
           <form onSubmit={submit} className="mt-6 space-y-4">
