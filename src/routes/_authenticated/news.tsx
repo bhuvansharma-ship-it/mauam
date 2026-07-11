@@ -30,9 +30,9 @@ export const Route = createFileRoute("/_authenticated/news")({
   validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [
-      { title: "Latest News & Emergency Updates — Aurora Guardian" },
+      { title: "Latest News & Emergency Updates — Mausam" },
       { name: "description", content: "Verified real-time news on weather, disasters, public safety, and government advisories for your location." },
-      { property: "og:title", content: "Latest News & Emergency Updates — Aurora Guardian" },
+      { property: "og:title", content: "Latest News & Emergency Updates — Mausam" },
       { property: "og:description", content: "Verified real-time news on weather, disasters, public safety, and government advisories." },
     ],
   }),

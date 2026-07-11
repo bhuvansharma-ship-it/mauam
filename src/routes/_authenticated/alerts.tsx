@@ -17,9 +17,9 @@ const style = {
 export const Route = createFileRoute("/_authenticated/alerts")({
   head: () => ({
     meta: [
-      { title: "Active Alerts — Aurora Guardian" },
+      { title: "Active Alerts — Mausam" },
       { name: "description", content: "Real-time weather and public-safety alerts for your selected location." },
-      { property: "og:title", content: "Active Alerts — Aurora Guardian" },
+      { property: "og:title", content: "Active Alerts — Mausam" },
     ],
   }),
   component: AlertsPage,

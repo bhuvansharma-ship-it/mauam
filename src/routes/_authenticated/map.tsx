@@ -5,9 +5,9 @@ import { NearbyShelters } from "../../components/dashboard/nearby-shelters";
 export const Route = createFileRoute("/_authenticated/map")({
   head: () => ({
     meta: [
-      { title: "Live Incident Map — Aurora Guardian" },
+      { title: "Live Incident Map — Mausam" },
       { name: "description", content: "Live map of incidents, shelters, evacuation routes, and safe zones near you." },
-      { property: "og:title", content: "Live Incident Map — Aurora Guardian" },
+      { property: "og:title", content: "Live Incident Map — Mausam" },
     ],
   }),
   component: MapPage,

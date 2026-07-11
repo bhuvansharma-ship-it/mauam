@@ -6,9 +6,9 @@ import { NewsCard } from "../../components/news/news-card";
 export const Route = createFileRoute("/_authenticated/bookmarks")({
   head: () => ({
     meta: [
-      { title: "Saved Articles — Aurora Guardian" },
+      { title: "Saved Articles — Mausam" },
       { name: "description", content: "Your saved news articles and advisories." },
-      { property: "og:title", content: "Saved Articles — Aurora Guardian" },
+      { property: "og:title", content: "Saved Articles — Mausam" },
     ],
   }),
   component: BookmarksPage,
