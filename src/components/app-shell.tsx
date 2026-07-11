@@ -3,7 +3,9 @@ import { Bell, Bookmark, CloudSun, Map, Menu, MoonStar, Newspaper, Settings, Shi
 import { useState, type ReactNode } from "react";
 import { useTheme } from "./theme-provider";
 import { LocationSwitcher } from "./location-switcher";
-import { breakingNews } from "../lib/mock/news";
+import { useLocation } from "../lib/locations";
+import { useQuery } from "@tanstack/react-query";
+import { newsQueryOptions } from "../lib/news-query";
 import { cn } from "../lib/utils";
 
 const NAV = [
