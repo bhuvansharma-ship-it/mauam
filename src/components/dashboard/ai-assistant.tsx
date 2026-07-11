@@ -1,27 +1,15 @@
-import { Mic, MicOff, Send, Sparkles, Square } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { MapPin, Mic, MicOff, Send, Sparkles, Square } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { GlassCard } from "../glass-card";
+import { useLocation } from "../../lib/locations";
 
 const SUGGESTIONS = [
-  "What should I do about a flood warning?",
+  "Is it safe to travel today?",
+  "What should I do about a flood warning here?",
   "Build me a 24-hour blackout checklist",
-  "Safest route out of a coastal flood zone?",
   "First-aid steps for heat exhaustion",
-];
-
-const INITIAL: UIMessage[] = [
-  {
-    id: "welcome",
-    role: "assistant",
-    parts: [
-      {
-        type: "text",
-        text: "I'm Aurora — your emergency assistant. Ask about alerts, checklists, evacuation routes, first aid, or shelter locations. You can type or tap the mic to talk.",
-      },
-    ],
-  },
 ];
 
 // Minimal Web Speech API typing
@@ -41,11 +29,57 @@ export function AIAssistant() {
   const [listening, setListening] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<InstanceType<SpeechRecognitionCtor> | null>(null);
+  const { active, locations } = useLocation();
 
-  const { messages, sendMessage, status, stop, error } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
-    messages: INITIAL,
+  const initial = useMemo<UIMessage[]>(
+    () => [
+      {
+        id: "welcome",
+        role: "assistant",
+        parts: [
+          {
+            type: "text",
+            text: `I'm Aurora — your emergency assistant, tuned to ${active.name}${
+              active.label ? ` (${active.label})` : ""
+            }. Ask about alerts, checklists, evacuation routes, first aid, or shelter locations. You can type or tap the mic to talk.`,
+          },
+        ],
+      },
+    ],
+    // Only re-init the welcome message when the active location changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [active.id],
+  );
+
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport({
+        api: "/api/chat",
+        body: {
+          location: {
+            name: active.name,
+            region: active.region,
+            country: active.country,
+            lat: active.lat,
+            lon: active.lon,
+            label: active.label,
+            savedLocations: locations.map((l) => ({ name: l.name, region: l.region, label: l.label })),
+          },
+        },
+      }),
+    [active, locations],
+  );
+
+  const { messages, sendMessage, setMessages, status, stop, error } = useChat({
+    transport,
+    messages: initial,
   });
+
+  // When the active location changes, reset the conversation so the welcome + system context refresh.
+  useEffect(() => {
+    setMessages(initial);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active.id]);
 
   const isLoading = status === "submitted" || status === "streaming";
 
