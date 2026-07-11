@@ -1,21 +1,18 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 export type SavedLocation = {
   id: string;
-  name: string;   // e.g. "Bengaluru"
-  region: string; // e.g. "Karnataka, India"
+  name: string;
+  region: string;
   country: string;
   lat: number;
   lon: number;
-  label?: string; // "Home", "Work", "Family"
+  label?: string;
   notifications?: boolean;
+  is_home?: boolean;
 };
-
-const DEFAULT_LOCATIONS: SavedLocation[] = [
-  { id: "bengaluru", name: "Bengaluru", region: "Karnataka, India", country: "India", lat: 12.9716, lon: 77.5946, label: "Home", notifications: true },
-  { id: "mumbai", name: "Mumbai", region: "Maharashtra, India", country: "India", lat: 19.076, lon: 72.8777, notifications: true },
-  { id: "chennai", name: "Chennai", region: "Tamil Nadu, India", country: "India", lat: 13.0827, lon: 80.2707, label: "Work", notifications: false },
-];
 
 type Ctx = {
   locations: SavedLocation[];
@@ -23,111 +20,194 @@ type Ctx = {
   active: SavedLocation;
   homeId: string;
   setActive: (id: string) => void;
-  addLocation: (loc: Omit<SavedLocation, "id">) => string;
-  removeLocation: (id: string) => void;
-  renameLocation: (id: string, label: string) => void;
-  setHome: (id: string) => void;
-  toggleNotifications: (id: string) => void;
+  addLocation: (loc: Omit<SavedLocation, "id">) => Promise<string>;
+  removeLocation: (id: string) => Promise<void>;
+  renameLocation: (id: string, label: string) => Promise<void>;
+  setHome: (id: string) => Promise<void>;
+  toggleNotifications: (id: string) => Promise<void>;
   detectCurrent: () => Promise<void>;
   detecting: boolean;
   detectError: string | null;
   refreshTick: number;
   refresh: () => void;
+  loading: boolean;
+};
+
+const FALLBACK: SavedLocation = {
+  id: "fallback",
+  name: "Bengaluru",
+  region: "Karnataka, India",
+  country: "India",
+  lat: 12.9716,
+  lon: 77.5946,
+  label: "Home",
+  notifications: true,
+  is_home: true,
 };
 
 const LocationContext = createContext<Ctx | null>(null);
 
-const LS_KEY = "aurora.locations.v1";
-const LS_ACTIVE = "aurora.locations.active.v1";
-const LS_HOME = "aurora.locations.home.v1";
+type Row = {
+  id: string;
+  name: string;
+  region: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  label: string | null;
+  is_home: boolean;
+  notifications: boolean;
+  sort_order: number;
+};
 
-type Persisted = { locations: SavedLocation[]; activeId?: string; homeId?: string };
+function rowToLocation(r: Row): SavedLocation {
+  return {
+    id: r.id,
+    name: r.name,
+    region: r.region,
+    country: r.country,
+    lat: r.latitude,
+    lon: r.longitude,
+    label: r.label ?? undefined,
+    is_home: r.is_home,
+    notifications: r.notifications,
+  };
+}
 
-function loadPersisted(): Persisted | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return null;
-    const locations = JSON.parse(raw) as SavedLocation[];
-    return {
-      locations,
-      activeId: localStorage.getItem(LS_ACTIVE) || undefined,
-      homeId: localStorage.getItem(LS_HOME) || undefined,
-    };
-  } catch {
-    return null;
-  }
+async function fetchLocations() {
+  const { data, error } = await supabase
+    .from("saved_locations")
+    .select("id,name,region,country,latitude,longitude,label,is_home,notifications,sort_order")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return (data as Row[]).map(rowToLocation);
+}
+
+async function fetchActive() {
+  const { data, error } = await supabase
+    .from("user_preferences")
+    .select("active_location_id")
+    .maybeSingle();
+  if (error) throw error;
+  return (data?.active_location_id as string | null) ?? null;
 }
 
 export function LocationProvider({ children }: { children: ReactNode }) {
-  const [locations, setLocations] = useState<SavedLocation[]>(DEFAULT_LOCATIONS);
-  const [activeId, setActiveId] = useState<string>(DEFAULT_LOCATIONS[0].id);
-  const [homeId, setHomeId] = useState<string>(DEFAULT_LOCATIONS[0].id);
+  const qc = useQueryClient();
   const [detecting, setDetecting] = useState(false);
   const [detectError, setDetectError] = useState<string | null>(null);
   const [refreshTick, setRefreshTick] = useState(0);
-  const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => {
-    const p = loadPersisted();
-    if (p && p.locations.length) {
-      setLocations(p.locations);
-      const home = p.homeId && p.locations.some((l) => l.id === p.homeId) ? p.homeId : p.locations[0].id;
-      const active = p.activeId && p.locations.some((l) => l.id === p.activeId) ? p.activeId : home;
-      setHomeId(home);
-      setActiveId(active);
-    }
-    setHydrated(true);
-  }, []);
+  const locationsQ = useQuery({
+    queryKey: ["saved_locations"],
+    queryFn: fetchLocations,
+    staleTime: 60_000,
+  });
+  const activeQ = useQuery({
+    queryKey: ["user_preferences", "active"],
+    queryFn: fetchActive,
+    staleTime: 60_000,
+  });
 
-  useEffect(() => {
-    if (!hydrated) return;
-    localStorage.setItem(LS_KEY, JSON.stringify(locations));
-  }, [locations, hydrated]);
-  useEffect(() => {
-    if (hydrated) localStorage.setItem(LS_ACTIVE, activeId);
-  }, [activeId, hydrated]);
-  useEffect(() => {
-    if (hydrated) localStorage.setItem(LS_HOME, homeId);
-  }, [homeId, hydrated]);
+  const locations: SavedLocation[] = locationsQ.data && locationsQ.data.length > 0 ? locationsQ.data : [FALLBACK];
+  const homeId = locations.find((l) => l.is_home)?.id ?? locations[0].id;
+  const activeId = activeQ.data && locations.some((l) => l.id === activeQ.data) ? (activeQ.data as string) : homeId;
+  const active = useMemo(() => locations.find((l) => l.id === activeId) ?? locations[0], [locations, activeId]);
 
-  const active = useMemo(
-    () => locations.find((l) => l.id === activeId) ?? locations[0] ?? DEFAULT_LOCATIONS[0],
-    [locations, activeId],
-  );
-
-  const addLocation = useCallback((loc: Omit<SavedLocation, "id">) => {
-    const id = `${loc.name}-${loc.lat.toFixed(3)}-${loc.lon.toFixed(3)}`.toLowerCase().replace(/[^a-z0-9-]/g, "-");
-    setLocations((prev) => {
-      if (prev.some((p) => p.id === id)) return prev;
-      return [...prev, { ...loc, id }];
-    });
-    setActiveId(id);
-    return id;
-  }, []);
-
-  const removeLocation = useCallback(
-    (id: string) => {
-      setLocations((prev) => {
-        const next = prev.filter((l) => l.id !== id);
-        if (next.length === 0) return prev; // keep at least one
-        if (activeId === id) setActiveId(next[0].id);
-        if (homeId === id) setHomeId(next[0].id);
-        return next;
-      });
+  const setActiveMut = useMutation({
+    mutationFn: async (id: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { error } = await supabase
+        .from("user_preferences")
+        .upsert({ user_id: user.id, active_location_id: id, updated_at: new Date().toISOString() });
+      if (error) throw error;
     },
-    [activeId, homeId],
-  );
+    onMutate: async (id) => {
+      await qc.cancelQueries({ queryKey: ["user_preferences", "active"] });
+      const prev = qc.getQueryData<string | null>(["user_preferences", "active"]);
+      qc.setQueryData(["user_preferences", "active"], id);
+      return { prev };
+    },
+    onError: (_e, _id, ctx) => {
+      if (ctx) qc.setQueryData(["user_preferences", "active"], ctx.prev);
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["user_preferences", "active"] }),
+  });
 
-  const renameLocation = useCallback((id: string, label: string) => {
-    setLocations((prev) => prev.map((l) => (l.id === id ? { ...l, label: label.trim() || undefined } : l)));
-  }, []);
+  const addMut = useMutation({
+    mutationFn: async (loc: Omit<SavedLocation, "id">) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not signed in");
+      const { data, error } = await supabase
+        .from("saved_locations")
+        .insert({
+          user_id: user.id,
+          name: loc.name,
+          region: loc.region ?? "",
+          country: loc.country ?? "",
+          latitude: loc.lat,
+          longitude: loc.lon,
+          label: loc.label ?? null,
+          notifications: loc.notifications ?? true,
+          is_home: false,
+        })
+        .select("id")
+        .single();
+      if (error) throw error;
+      return data.id as string;
+    },
+    onSuccess: async (id) => {
+      await qc.invalidateQueries({ queryKey: ["saved_locations"] });
+      setActiveMut.mutate(id);
+    },
+  });
 
-  const setHome = useCallback((id: string) => setHomeId(id), []);
+  const removeMut = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("saved_locations").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["saved_locations"] }),
+  });
 
-  const toggleNotifications = useCallback((id: string) => {
-    setLocations((prev) => prev.map((l) => (l.id === id ? { ...l, notifications: !l.notifications } : l)));
-  }, []);
+  const renameMut = useMutation({
+    mutationFn: async ({ id, label }: { id: string; label: string }) => {
+      const { error } = await supabase.from("saved_locations").update({ label: label.trim() || null }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["saved_locations"] }),
+  });
+
+  const setHomeMut = useMutation({
+    mutationFn: async (id: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      // clear existing home flags then set new
+      await supabase.from("saved_locations").update({ is_home: false }).eq("user_id", user.id).eq("is_home", true);
+      const { error } = await supabase.from("saved_locations").update({ is_home: true }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["saved_locations"] }),
+  });
+
+  const toggleNotifMut = useMutation({
+    mutationFn: async (id: string) => {
+      const current = locations.find((l) => l.id === id);
+      const next = !(current?.notifications ?? true);
+      const { error } = await supabase.from("saved_locations").update({ notifications: next }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["saved_locations"] }),
+  });
+
+  const addLocation = useCallback(async (loc: Omit<SavedLocation, "id">) => addMut.mutateAsync(loc), [addMut]);
+  const removeLocation = useCallback(async (id: string) => { await removeMut.mutateAsync(id); }, [removeMut]);
+  const renameLocation = useCallback(async (id: string, label: string) => { await renameMut.mutateAsync({ id, label }); }, [renameMut]);
+  const setHome = useCallback(async (id: string) => { await setHomeMut.mutateAsync(id); }, [setHomeMut]);
+  const toggleNotifications = useCallback(async (id: string) => { await toggleNotifMut.mutateAsync(id); }, [toggleNotifMut]);
+  const setActive = useCallback((id: string) => { setActiveMut.mutate(id); }, [setActiveMut]);
 
   const detectCurrent = useCallback(async () => {
     setDetectError(null);
@@ -149,21 +229,13 @@ export function LocationProvider({ children }: { children: ReactNode }) {
           `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
         );
         if (res.ok) {
-          const j = (await res.json()) as {
-            city?: string;
-            locality?: string;
-            principalSubdivision?: string;
-            countryName?: string;
-          };
+          const j = (await res.json()) as { city?: string; locality?: string; principalSubdivision?: string; countryName?: string };
           name = j.city || j.locality || name;
           country = j.countryName || "";
           region = [j.principalSubdivision, j.countryName].filter(Boolean).join(", ") || region;
         }
-      } catch {
-        // ignore reverse-geocode failure; still add coords-based location
-      }
-      const id = addLocation({ name, region, country, lat: latitude, lon: longitude, label: "Current" });
-      setActiveId(id);
+      } catch { /* ignore */ }
+      await addMut.mutateAsync({ name, region, country, lat: latitude, lon: longitude, label: "Current", notifications: true });
     } catch (err) {
       const e = err as GeolocationPositionError | Error;
       const code = (e as GeolocationPositionError).code;
@@ -173,16 +245,19 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     } finally {
       setDetecting(false);
     }
-  }, [addLocation]);
+  }, [addMut]);
 
-  const refresh = useCallback(() => setRefreshTick((t) => t + 1), []);
+  const refresh = useCallback(() => {
+    setRefreshTick((t) => t + 1);
+    qc.invalidateQueries({ queryKey: ["saved_locations"] });
+  }, [qc]);
 
   const value: Ctx = {
     locations,
     activeId,
     active,
     homeId,
-    setActive: setActiveId,
+    setActive,
     addLocation,
     removeLocation,
     renameLocation,
@@ -193,6 +268,7 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     detectError,
     refreshTick,
     refresh,
+    loading: locationsQ.isLoading,
   };
 
   return <LocationContext.Provider value={value}>{children}</LocationContext.Provider>;
@@ -204,14 +280,7 @@ export function useLocation() {
   return ctx;
 }
 
-// Open-Meteo geocoding autocomplete (free, no key, CORS-friendly).
-export type GeoSuggestion = {
-  name: string;
-  region: string;
-  country: string;
-  lat: number;
-  lon: number;
-};
+export type GeoSuggestion = { name: string; region: string; country: string; lat: number; lon: number };
 
 export async function searchCities(query: string, signal?: AbortSignal): Promise<GeoSuggestion[]> {
   const q = query.trim();
@@ -220,14 +289,7 @@ export async function searchCities(query: string, signal?: AbortSignal): Promise
   const res = await fetch(url, { signal });
   if (!res.ok) return [];
   const j = (await res.json()) as {
-    results?: Array<{
-      name: string;
-      admin1?: string;
-      admin2?: string;
-      country?: string;
-      latitude: number;
-      longitude: number;
-    }>;
+    results?: Array<{ name: string; admin1?: string; admin2?: string; country?: string; latitude: number; longitude: number }>;
   };
   return (j.results ?? []).map((r) => ({
     name: r.name,
