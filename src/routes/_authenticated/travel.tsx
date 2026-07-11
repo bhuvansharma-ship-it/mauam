@@ -9,6 +9,7 @@ import { fetchTravelAdvisory } from "../../lib/travel.functions";
 import { cn } from "../../lib/utils";
 import { CityPicker, type Point } from "../../components/travel/city-picker";
 import { AdvisorySummary, DestinationWeather, DailyOutlook } from "../../components/travel/advisory-panels";
+import { useRecentTrips } from "../../hooks/use-recent-trips";
 
 export const Route = createFileRoute("/_authenticated/travel")({
   head: () => ({
