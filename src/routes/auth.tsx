@@ -13,6 +13,15 @@ export const Route = createFileRoute("/auth")({
     meta: [
       { title: "Sign in — Mausam" },
       { name: "description", content: "Sign in or create an account to access your personalized weather, alerts, and emergency dashboard." },
+      { property: "og:title", content: "Sign in — Mausam" },
+      { property: "og:description", content: "Sign in or create an account to access your personalized weather, alerts, and emergency dashboard." },
+      { property: "og:url", content: "https://mauam.lovable.app/auth" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/00b364fa-3c06-4a33-b3ff-7623d2c8f8c5" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/00b364fa-3c06-4a33-b3ff-7623d2c8f8c5" },
+      { name: "robots", content: "noindex" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://mauam.lovable.app/auth" },
     ],
   }),
   component: AuthPage,
