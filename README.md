@@ -81,6 +81,53 @@ flowchart TD
     N --> O[End session]
 ```
 
+## Architecture & Data Flow
+
+```mermaid
+flowchart LR
+    subgraph Sources["External Data Sources"]
+        A[Open-Meteo Weather API]
+        B[Google News RSS]
+    end
+
+    subgraph Server["TanStack Server Functions"]
+        C[travel.functions.ts]
+        D[news.functions.ts]
+    end
+
+    subgraph State["App State & Cache"]
+        E[TanStack Query Client]
+        F[LocationProvider]
+        G[Supabase Auth Session]
+    end
+
+    subgraph UI["React UI Components"]
+        H[HeroWeather]
+        I[LatestNewsWidget]
+        J[TravelAdvisory]
+        K[AlertBanner]
+        L[AIAssistant]
+    end
+
+    A -->|forecast, current, daily| C
+    B -->|RSS headlines| D
+    C -->|advisory, weather| E
+    D -->|articles, alerts| E
+    F -->|active location| E
+    E -->|weather data| H
+    E -->|news & alerts| I
+    E -->|destination weather| J
+    E -->|alert feed| K
+    G -->|user context| L
+    H --> User
+    I --> User
+    J --> User
+    K --> User
+    L --> User
+```
+
+The diagram above shows how Mausam pulls live weather data from Open-Meteo and news headlines from Google News RSS into server-side TanStack functions. Those functions transform and cache the data in TanStack Query, which feeds the dashboard UI components that the user sees.
+
 ## Environment Variables
 
 The project expects standard Lovable Cloud / Supabase environment variables. These are managed automatically in the Lovable environment; do not commit secrets to Git.
