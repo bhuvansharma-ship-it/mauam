@@ -93,18 +93,22 @@ function NewsPage() {
 
       <form
         onSubmit={(e) => { e.preventDefault(); setQ(queryInput); }}
+        role="search"
+        aria-label="Search news"
         className="flex flex-col gap-3 sm:flex-row sm:items-center"
       >
-        <div className="flex flex-1 items-center gap-2 rounded-full border border-glass-border/60 bg-glass px-4 py-2.5">
-          <Search className="h-4 w-4 text-muted-foreground" />
+        <div className="flex flex-1 items-center gap-2 rounded-full border border-glass-border/60 bg-glass px-4 py-2.5 focus-within:ring-2 focus-within:ring-ring">
+          <Search className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+          <label htmlFor="news-search" className="sr-only">Search news</label>
           <input
+            id="news-search"
             value={queryInput}
             onChange={(e) => setQueryInput(e.target.value)}
             placeholder={`Search news in ${active.name}…`}
-            className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            className="min-h-6 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
           {search.q && (
-            <button type="button" onClick={() => { setQueryInput(""); setQ(""); }} className="text-xs text-muted-foreground hover:text-foreground">clear</button>
+            <button type="button" onClick={() => { setQueryInput(""); setQ(""); }} aria-label="Clear search" className="text-xs text-muted-foreground hover:text-foreground">clear</button>
           )}
         </div>
         <div className="flex items-center gap-2">
