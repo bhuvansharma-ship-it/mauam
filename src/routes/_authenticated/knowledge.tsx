@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from "../../components/ui/accordion";
 import { knowledge } from "../../lib/knowledge";
+import { ReadAloudButton } from "../../components/read-aloud-button";
 
 export const Route = createFileRoute("/_authenticated/knowledge")({
   head: () => ({
@@ -99,6 +100,11 @@ function KnowledgeHubPage() {
                         </span>
                       </AccordionTrigger>
                       <AccordionContent>
+                        <div className="mb-2">
+                          <ReadAloudButton
+                            text={`${section.heading}. ${section.points.join(". ")}.`}
+                          />
+                        </div>
                         <ul className="space-y-1.5 pl-1 text-sm text-muted-foreground">
                           {section.points.map((p, j) => (
                             <li key={j} className="flex gap-2">
