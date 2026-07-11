@@ -1,9 +1,11 @@
 import { ShieldAlert, X } from "lucide-react";
 import { useState } from "react";
-import { alerts } from "../../lib/mock/alerts";
+import { useQuery } from "@tanstack/react-query";
 import { timeAgo } from "../../lib/format-time";
 import { cn } from "../../lib/utils";
 import { Link } from "@tanstack/react-router";
+import { useLocation } from "../../lib/locations";
+import { alertsQueryOptions } from "../../lib/alerts-query";
 
 const styleFor = {
   critical: "border-weather-critical/50 bg-weather-critical/10",
@@ -14,6 +16,8 @@ const styleFor = {
 
 export function AlertBanner() {
   const [dismissed, setDismissed] = useState<string[]>([]);
+  const { active } = useLocation();
+  const { data: alerts = [] } = useQuery(alertsQueryOptions(active));
   const top = alerts.find((a) => a.severity === "critical" && !dismissed.includes(a.id));
   if (!top) return null;
   return (
