@@ -30,8 +30,10 @@ function TravelPage() {
   const [to, setTo] = useState<Point | null>(null);
 
   const advisorFn = useServerFn(fetchTravelAdvisory);
+  const { add: addRecentTrip } = useRecentTrips();
   const mut = useMutation({
     mutationFn: (v: { from: Point; to: Point }) => advisorFn({ data: v }),
+    onSuccess: (data) => addRecentTrip(data),
   });
 
   const canCheck = from && to && !(from.lat === to.lat && from.lon === to.lon);
