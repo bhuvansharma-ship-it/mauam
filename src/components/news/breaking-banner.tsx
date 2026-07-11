@@ -1,5 +1,5 @@
 import { timeAgo } from "../../lib/format-time";
-import type { NewsArticle } from "../../lib/mock/news";
+import type { Article } from "../../lib/mock/news";
 
 export function BreakingBanner({ items }: { items: NewsArticle[] }) {
   if (items.length === 0) return null;
