@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as MapRouteImport } from './routes/map'
+import { Route as KnowledgeRouteImport } from './routes/knowledge'
+import { Route as ChecklistRouteImport } from './routes/checklist'
 import { Route as BookmarksRouteImport } from './routes/bookmarks'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
@@ -30,6 +32,16 @@ const NewsRoute = NewsRouteImport.update({
 const MapRoute = MapRouteImport.update({
   id: '/map',
   path: '/map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KnowledgeRoute = KnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChecklistRoute = ChecklistRouteImport.update({
+  id: '/checklist',
+  path: '/checklist',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookmarksRoute = BookmarksRouteImport.update({
@@ -57,6 +69,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/bookmarks': typeof BookmarksRoute
+  '/checklist': typeof ChecklistRoute
+  '/knowledge': typeof KnowledgeRoute
   '/map': typeof MapRoute
   '/news': typeof NewsRouteWithChildren
   '/settings': typeof SettingsRoute
@@ -66,6 +80,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/bookmarks': typeof BookmarksRoute
+  '/checklist': typeof ChecklistRoute
+  '/knowledge': typeof KnowledgeRoute
   '/map': typeof MapRoute
   '/news': typeof NewsRouteWithChildren
   '/settings': typeof SettingsRoute
@@ -76,6 +92,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/bookmarks': typeof BookmarksRoute
+  '/checklist': typeof ChecklistRoute
+  '/knowledge': typeof KnowledgeRoute
   '/map': typeof MapRoute
   '/news': typeof NewsRouteWithChildren
   '/settings': typeof SettingsRoute
@@ -87,6 +105,8 @@ export interface FileRouteTypes {
     | '/'
     | '/alerts'
     | '/bookmarks'
+    | '/checklist'
+    | '/knowledge'
     | '/map'
     | '/news'
     | '/settings'
@@ -96,6 +116,8 @@ export interface FileRouteTypes {
     | '/'
     | '/alerts'
     | '/bookmarks'
+    | '/checklist'
+    | '/knowledge'
     | '/map'
     | '/news'
     | '/settings'
@@ -105,6 +127,8 @@ export interface FileRouteTypes {
     | '/'
     | '/alerts'
     | '/bookmarks'
+    | '/checklist'
+    | '/knowledge'
     | '/map'
     | '/news'
     | '/settings'
@@ -115,6 +139,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertsRoute: typeof AlertsRoute
   BookmarksRoute: typeof BookmarksRoute
+  ChecklistRoute: typeof ChecklistRoute
+  KnowledgeRoute: typeof KnowledgeRoute
   MapRoute: typeof MapRoute
   NewsRoute: typeof NewsRouteWithChildren
   SettingsRoute: typeof SettingsRoute
@@ -141,6 +167,20 @@ declare module '@tanstack/react-router' {
       path: '/map'
       fullPath: '/map'
       preLoaderRoute: typeof MapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/knowledge': {
+      id: '/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof KnowledgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checklist': {
+      id: '/checklist'
+      path: '/checklist'
+      fullPath: '/checklist'
+      preLoaderRoute: typeof ChecklistRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bookmarks': {
@@ -188,6 +228,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
   BookmarksRoute: BookmarksRoute,
+  ChecklistRoute: ChecklistRoute,
+  KnowledgeRoute: KnowledgeRoute,
   MapRoute: MapRoute,
   NewsRoute: NewsRouteWithChildren,
   SettingsRoute: SettingsRoute,
@@ -195,3 +237,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
