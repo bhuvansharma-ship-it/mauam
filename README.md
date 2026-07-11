@@ -60,6 +60,27 @@ tests/             # Unit and integration tests
 - Read-aloud support for news, alerts, weather summaries, and knowledge topics
 - Multi-language support (Hindi, Spanish, Arabic, Marathi, Mandarin)
 
+## How the App Works
+
+```mermaid
+flowchart TD
+    A[User opens Mausam] --> B[Select location or allow geolocation]
+    B --> C[Load weather forecast]
+    C --> D[Check severe weather alerts]
+    D --> E{Active alerts?}
+    E -->|Yes| F[Show alert banner and notifications]
+    E -->|No| G[Show normal dashboard]
+    F --> H[Display news and official bulletins]
+    G --> H
+    H --> I[User picks travel destination]
+    I --> J[Fetch destination weather]
+    J --> K[Suggest travel actions]
+    K --> L[User reads knowledge hub or checklist]
+    L --> M[Ask AI assistant for help]
+    M --> N[Optional: read aloud content]
+    N --> O[End session]
+```
+
 ## Environment Variables
 
 The project expects standard Lovable Cloud / Supabase environment variables. These are managed automatically in the Lovable environment; do not commit secrets to Git.
