@@ -59,7 +59,8 @@ function KnowledgeHubPage() {
         {knowledge.map((topic) => {
           const Icon = topic.icon;
           return (
-            <GlassCard key={topic.id} className="scroll-mt-24" id={topic.slug}>
+            <section key={topic.id} id={topic.slug} className="scroll-mt-24">
+            <GlassCard>
               <article className="p-5 sm:p-6">
                 <div className="flex items-start gap-4">
                   <div
