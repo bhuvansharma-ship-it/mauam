@@ -1,16 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { Filter, MapPin, RefreshCw, Search, TrendingUp } from "lucide-react";
+import { Filter, MapPin, RefreshCw, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { NewsCategory, NewsSeverity } from "../../lib/mock/news";
 import { NewsCard, NewsCardSkeleton } from "../../components/news/news-card";
-import { GlassCard } from "../../components/glass-card";
-import { timeAgo } from "../../lib/format-time";
+import { BreakingBanner } from "../../components/news/breaking-banner";
+import { NewsSidebar } from "../../components/news/news-sidebar";
 import { cn } from "../../lib/utils";
-import { SourceBadge } from "../../components/news/source-badge";
-import { SeverityBadge } from "../../components/news/severity-badge";
 import { useLocation } from "../../lib/locations";
 import { newsQueryOptions } from "../../lib/news-query";
 
@@ -71,23 +69,7 @@ function NewsPage() {
 
   return (
     <div className="space-y-6">
-      {breaking.length > 0 && (
-        <div className="rounded-3xl border border-news-breaking/50 bg-news-breaking/5 p-1">
-          <div className="flex flex-col gap-3 rounded-[calc(1.25rem-4px)] bg-gradient-to-r from-news-breaking/20 via-transparent to-news-breaking/10 p-4 sm:flex-row sm:items-center sm:gap-6 sm:p-5">
-            <div className="flex items-center gap-2">
-              <span className="rounded-full bg-news-breaking px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white animate-pulse-alert">Breaking</span>
-            </div>
-            <div className="flex-1 space-y-1">
-              {breaking.map((b) => (
-                <a key={b.id} href={b.url ?? "#"} target="_blank" rel="noopener noreferrer" className="block font-display text-base font-semibold hover:underline sm:text-lg">
-                  {b.headline}
-                  <span className="ml-2 text-xs font-normal text-muted-foreground">· {b.source.name} · {timeAgo(b.publishedAt)}</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <BreakingBanner items={breaking} />
 
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
@@ -185,67 +167,7 @@ function NewsPage() {
         </div>
 
         <aside className="col-span-12 space-y-5 lg:col-span-4">
-          <GlassCard>
-            <div className="p-5">
-              <div className="mb-3 flex items-center gap-2">
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-news-official/20"><TrendingUp className="h-3.5 w-3.5 text-news-official" /></span>
-                <h3 className="font-display text-base font-semibold">Emergency bulletins</h3>
-              </div>
-              {bulletins.length === 0 ? (
-                <p className="text-xs text-muted-foreground">No official bulletins in this feed right now.</p>
-              ) : (
-                <ul className="space-y-2">
-                  {bulletins.map((a) => (
-                    <li key={a.id}>
-                      <a href={a.url ?? "#"} target="_blank" rel="noopener noreferrer" className="block rounded-xl border border-glass-border/50 bg-glass p-3 hover:border-news-official/50">
-                        <div className="flex items-center gap-1.5"><SeverityBadge severity={a.severity} /><SourceBadge source={a.source} /></div>
-                        <div className="mt-1 line-clamp-2 text-sm font-semibold">{a.headline}</div>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </GlassCard>
-
-          <GlassCard>
-            <div className="p-5">
-              <h3 className="mb-3 font-display text-base font-semibold">Trending topics</h3>
-              <div className="flex flex-wrap gap-1.5">
-                {trending.length === 0 ? (
-                  <span className="text-xs text-muted-foreground">Nothing trending nearby.</span>
-                ) : trending.map((a) => (
-                  <a key={a.id} href={a.url ?? "#"} target="_blank" rel="noopener noreferrer" className="rounded-full border border-glass-border/60 bg-glass px-3 py-1 text-xs hover:border-primary/50">
-                    <span className="mr-1 text-primary">#</span>{a.category}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </GlassCard>
-
-          <GlassCard>
-            <div className="p-5">
-              <h3 className="mb-3 font-display text-base font-semibold">Recent updates</h3>
-              {timeline.length === 0 ? (
-                <p className="text-xs text-muted-foreground">Waiting for updates…</p>
-              ) : (
-                <ol className="space-y-3">
-                  {timeline.map((a) => (
-                    <li key={a.id} className="flex gap-3">
-                      <div className="flex flex-col items-center">
-                        <div className="h-2 w-2 rounded-full bg-primary" />
-                        <div className="mt-1 h-full w-px bg-glass-border/60" />
-                      </div>
-                      <div className="pb-3">
-                        <div className="text-[10px] text-muted-foreground">{timeAgo(a.publishedAt)}</div>
-                        <a href={a.url ?? "#"} target="_blank" rel="noopener noreferrer" className="line-clamp-2 text-sm font-medium hover:text-primary">{a.headline}</a>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              )}
-            </div>
-          </GlassCard>
+          <NewsSidebar bulletins={bulletins} trending={trending} timeline={timeline} />
           <Link to="/bookmarks" className="block text-center text-xs text-muted-foreground hover:text-primary">View saved articles →</Link>
         </aside>
       </div>
