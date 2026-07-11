@@ -80,7 +80,7 @@ function ArticleDetail() {
           </div>
           <p className="text-lg leading-relaxed text-foreground/90">{a.summary}</p>
           <div className="space-y-4 text-[15px] leading-relaxed text-foreground/80">
-            {a.body.split("\n\n").map((p, i) => <p key={i}>{p}</p>)}
+            {a.body.split("\n\n").map((p: string, i: number) => <p key={i}>{p}</p>)}
           </div>
         </div>
       </GlassCard>

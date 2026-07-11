@@ -61,9 +61,10 @@ function NewsPage() {
   const bulletins = articles.filter((a) => a.source.official).slice(0, 4);
   const timeline = [...articles].sort((a, b) => +new Date(b.publishedAt) - +new Date(a.publishedAt)).slice(0, 8);
 
-  const setCategory = (c: string) => navigate({ search: (p) => ({ ...p, category: c }) });
-  const setQ = (q: string) => navigate({ search: (p) => ({ ...p, q }) });
-  const setSeverity = (s: string) => navigate({ search: (p) => ({ ...p, severity: s }) });
+  type S = z.infer<typeof searchSchema>;
+  const setCategory = (c: string) => navigate({ search: (p: S) => ({ ...p, category: c }) });
+  const setQ = (q: string) => navigate({ search: (p: S) => ({ ...p, q }) });
+  const setSeverity = (s: string) => navigate({ search: (p: S) => ({ ...p, severity: s }) });
 
   return (
     <div className="space-y-6">
