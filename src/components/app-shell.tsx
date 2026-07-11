@@ -136,10 +136,15 @@ function BreakingTicker() {
   const items = (query.data ?? []).filter((n) => n.severity === "breaking" || n.severity === "critical").slice(0, 8);
   if (!items.length) return null;
   return (
-    <div className="overflow-hidden border-t border-glass-border/60 bg-gradient-to-r from-weather-critical/10 via-transparent to-weather-storm/10">
+    <div
+      className="overflow-hidden border-t border-glass-border/60 bg-gradient-to-r from-weather-critical/10 via-transparent to-weather-storm/10"
+      role="region"
+      aria-label="Breaking news"
+      aria-live="polite"
+    >
       <div className="mx-auto flex max-w-[1440px] items-center gap-3 px-4 py-2 sm:px-6">
         <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-weather-critical px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white animate-pulse-alert">
-          <ShieldAlert className="h-3 w-3" /> Breaking
+          <ShieldAlert className="h-3 w-3" aria-hidden="true" /> Breaking
         </span>
         <div className="relative flex-1 overflow-hidden">
           <div className="flex whitespace-nowrap animate-ticker gap-10">
