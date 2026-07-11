@@ -1,25 +1,125 @@
-import { Send, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { Mic, MicOff, Send, Sparkles, Square } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport, type UIMessage } from "ai";
 import { GlassCard } from "../glass-card";
 
-const SEED = [
-  { role: "assistant", text: "I'm here to help you stay safe. Ask about the current flood warning, your checklist, or the safest route home." },
-];
 const SUGGESTIONS = [
-  "What should I do about the flood warning?",
-  "Am I ready if power goes out tonight?",
-  "Safest route from downtown to home?",
+  "What should I do about a flood warning?",
+  "Build me a 24-hour blackout checklist",
+  "Safest route out of a coastal flood zone?",
+  "First-aid steps for heat exhaustion",
 ];
+
+const INITIAL: UIMessage[] = [
+  {
+    id: "welcome",
+    role: "assistant",
+    parts: [
+      {
+        type: "text",
+        text: "I'm Aurora — your emergency assistant. Ask about alerts, checklists, evacuation routes, first aid, or shelter locations. You can type or tap the mic to talk.",
+      },
+    ],
+  },
+];
+
+// Minimal Web Speech API typing
+type SpeechRecognitionCtor = new () => {
+  lang: string;
+  interimResults: boolean;
+  continuous: boolean;
+  onresult: (e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void;
+  onend: () => void;
+  onerror: (e: unknown) => void;
+  start: () => void;
+  stop: () => void;
+};
 
 export function AIAssistant() {
-  const [messages, setMessages] = useState(SEED);
   const [input, setInput] = useState("");
+  const [listening, setListening] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<InstanceType<SpeechRecognitionCtor> | null>(null);
+
+  const { messages, sendMessage, status, stop, error } = useChat({
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    messages: INITIAL,
+  });
+
+  const isLoading = status === "submitted" || status === "streaming";
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, status]);
 
   const send = (text: string) => {
-    if (!text.trim()) return;
-    setMessages((m) => [...m, { role: "user", text }, { role: "assistant", text: mockReply(text) }]);
+    const t = text.trim();
+    if (!t || isLoading) return;
+    void sendMessage({ text: t });
     setInput("");
   };
+
+  const toggleMic = () => {
+    if (typeof window === "undefined") return;
+    const w = window as unknown as {
+      SpeechRecognition?: SpeechRecognitionCtor;
+      webkitSpeechRecognition?: SpeechRecognitionCtor;
+    };
+    const Ctor = w.SpeechRecognition || w.webkitSpeechRecognition;
+    if (!Ctor) {
+      alert("Voice input isn't supported in this browser. Try Chrome or Edge.");
+      return;
+    }
+    if (listening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      return;
+    }
+    const rec = new Ctor();
+    rec.lang = navigator.language || "en-US";
+    rec.interimResults = true;
+    rec.continuous = false;
+    let finalText = "";
+    rec.onresult = (e) => {
+      let interim = "";
+      for (let i = 0; i < e.results.length; i++) {
+        const chunk = e.results[i][0].transcript;
+        if (i === e.results.length - 1) interim = chunk;
+        else finalText += chunk;
+      }
+      setInput((finalText + interim).trim());
+    };
+    rec.onend = () => {
+      setListening(false);
+      const spoken = (finalText || input).trim();
+      if (spoken) send(spoken);
+    };
+    rec.onerror = () => setListening(false);
+    recognitionRef.current = rec;
+    setListening(true);
+    rec.start();
+  };
+
+  // Speak the latest assistant message when it finishes streaming.
+  const lastAssistantId = [...messages].reverse().find((m) => m.role === "assistant")?.id;
+  const spokenIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (isLoading || !lastAssistantId || spokenIdRef.current === lastAssistantId) return;
+    if (lastAssistantId === "welcome") {
+      spokenIdRef.current = lastAssistantId;
+      return;
+    }
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    const msg = messages.find((m) => m.id === lastAssistantId);
+    if (!msg) return;
+    const text = msg.parts.map((p) => (p.type === "text" ? p.text : "")).join(" ").trim();
+    if (!text) return;
+    spokenIdRef.current = lastAssistantId;
+    const utter = new SpeechSynthesisUtterance(text.slice(0, 500));
+    utter.rate = 1.02;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utter);
+  }, [isLoading, lastAssistantId, messages]);
 
   return (
     <GlassCard className="col-span-12 lg:col-span-4" glow="primary">
@@ -28,36 +128,95 @@ export function AIAssistant() {
           <div className="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent">
             <Sparkles className="h-4 w-4 text-primary-foreground" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h3 className="font-display text-base font-semibold">AI Emergency Assistant</h3>
-            <div className="text-[11px] text-muted-foreground">Powered by local guidance</div>
+            <div className="text-[11px] text-muted-foreground">
+              {isLoading ? "Aurora is thinking…" : "Voice + text · Gemini 2.5"}
+            </div>
           </div>
         </div>
-        <div className="flex-1 space-y-2 overflow-y-auto pr-1 min-h-[140px] max-h-[220px]">
-          {messages.map((m, i) => (
-            <div key={i} className={m.role === "user" ? "ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-primary/20 px-3 py-2 text-sm" : "mr-auto max-w-[85%] rounded-2xl rounded-tl-sm bg-muted/60 px-3 py-2 text-sm"}>
-              {m.text}
+
+        <div ref={scrollRef} className="flex-1 space-y-2 overflow-y-auto pr-1 min-h-[160px] max-h-[260px]">
+          {messages.map((m) => {
+            const text = m.parts.map((p) => (p.type === "text" ? p.text : "")).join("");
+            return (
+              <div
+                key={m.id}
+                className={
+                  m.role === "user"
+                    ? "ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-primary/20 px-3 py-2 text-sm whitespace-pre-wrap"
+                    : "mr-auto max-w-[85%] rounded-2xl rounded-tl-sm bg-muted/60 px-3 py-2 text-sm whitespace-pre-wrap"
+                }
+              >
+                {text || (m.role === "assistant" && isLoading ? "…" : "")}
+              </div>
+            );
+          })}
+          {error && (
+            <div className="mr-auto max-w-[90%] rounded-2xl bg-destructive/15 px-3 py-2 text-xs text-destructive">
+              {error.message || "Something went wrong. Please try again."}
             </div>
-          ))}
+          )}
         </div>
+
         <div className="mt-3 flex flex-wrap gap-1.5">
           {SUGGESTIONS.map((s) => (
-            <button key={s} onClick={() => send(s)} className="rounded-full border border-glass-border/60 bg-glass px-2.5 py-1 text-[11px] hover:bg-accent/20">{s}</button>
+            <button
+              key={s}
+              onClick={() => send(s)}
+              disabled={isLoading}
+              className="rounded-full border border-glass-border/60 bg-glass px-2.5 py-1 text-[11px] hover:bg-accent/20 disabled:opacity-50"
+            >
+              {s}
+            </button>
           ))}
         </div>
-        <form onSubmit={(e) => { e.preventDefault(); send(input); }} className="mt-3 flex items-center gap-2 rounded-full border border-glass-border/60 bg-glass pl-4 pr-1 py-1">
-          <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask about your safety…" className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
-          <button aria-label="Send" className="grid h-8 w-8 place-items-center rounded-full bg-primary text-primary-foreground hover:opacity-90"><Send className="h-4 w-4" /></button>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            send(input);
+          }}
+          className="mt-3 flex items-center gap-2 rounded-full border border-glass-border/60 bg-glass pl-4 pr-1 py-1"
+        >
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={listening ? "Listening…" : "Ask Aurora about your safety…"}
+            className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+          />
+          <button
+            type="button"
+            onClick={toggleMic}
+            aria-label={listening ? "Stop listening" : "Start voice input"}
+            className={
+              "grid h-8 w-8 place-items-center rounded-full border border-glass-border/60 " +
+              (listening ? "bg-destructive text-destructive-foreground animate-pulse" : "hover:bg-accent/20")
+            }
+          >
+            {listening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+          </button>
+          {isLoading ? (
+            <button
+              type="button"
+              onClick={() => stop()}
+              aria-label="Stop"
+              className="grid h-8 w-8 place-items-center rounded-full bg-muted text-foreground hover:opacity-90"
+            >
+              <Square className="h-4 w-4" />
+            </button>
+          ) : (
+            <button
+              type="submit"
+              aria-label="Send"
+              disabled={!input.trim()}
+              className="grid h-8 w-8 place-items-center rounded-full bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50"
+            >
+              <Send className="h-4 w-4" />
+            </button>
+          )}
         </form>
       </div>
     </GlassCard>
   );
-}
-
-function mockReply(q: string) {
-  const lower = q.toLowerCase();
-  if (lower.includes("flood")) return "The Coastal Flood Warning is active through 8 PM. Avoid Embarcadero and Marina Blvd. If you live in Zone A, move your vehicle uphill and pack a go-bag.";
-  if (lower.includes("power") || lower.includes("outage")) return "Charge devices now, refill any medications, and locate flashlights. Your checklist is 70% complete — I recommend prioritizing the portable power bank and printed contact list.";
-  if (lower.includes("route")) return "I-280 southbound is currently the safest route home. Highway 101 has flooding near Sierra Point. Estimated travel time via I-280: 34 minutes.";
-  return "I can help with alerts, evacuation routes, checklist priorities, and shelter locations. What's on your mind?";
 }
