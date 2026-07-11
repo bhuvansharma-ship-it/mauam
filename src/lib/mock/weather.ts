@@ -17,59 +17,106 @@ export type CurrentWeather = {
   sunset: string;
 };
 
-export const currentWeather: CurrentWeather = {
-  location: "San Francisco",
-  region: "California, USA",
-  tempF: 63,
-  feelsLikeF: 61,
-  condition: "partly-cloudy",
-  conditionLabel: "Partly Cloudy",
-  high: 68,
-  low: 54,
-  humidity: 74,
-  windMph: 12,
-  windDir: "WSW",
-  uv: 4,
-  sunrise: "6:42 AM",
-  sunset: "7:58 PM",
-};
-
 export type HourlyPoint = { time: string; tempF: number; condition: Condition; precip: number };
+export type DayForecast = { date: string; condition: Condition; high: number; low: number; precip: number };
 
-const now = new Date();
-export const hourly: HourlyPoint[] = Array.from({ length: 24 }, (_, i) => {
-  const d = new Date(now.getTime() + i * 3600 * 1000);
-  const t = 58 + Math.round(6 * Math.sin(i / 3) + (i > 6 && i < 18 ? 6 : 0));
-  const cond: Condition =
-    i >= 5 && i <= 9 ? "rain" : i >= 14 && i <= 18 ? "partly-cloudy" : i >= 20 ? "cloudy" : "partly-cloudy";
-  return {
-    time: d.toISOString(),
-    tempF: t,
-    condition: cond,
-    precip: cond === "rain" ? 60 + i : cond === "cloudy" ? 20 : 5,
-  };
-});
+type Seed = { name: string; region: string; lat: number; lon: number };
 
-export type DayForecast = {
-  date: string;
-  condition: Condition;
-  high: number;
-  low: number;
-  precip: number;
+const CONDITIONS: Condition[] = ["sunny", "partly-cloudy", "cloudy", "rain", "storm", "fog"];
+const LABELS: Record<Condition, string> = {
+  sunny: "Sunny",
+  "partly-cloudy": "Partly Cloudy",
+  cloudy: "Cloudy",
+  rain: "Rain Showers",
+  storm: "Thunderstorms",
+  snow: "Snow",
+  fog: "Foggy",
 };
+const DIRS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 
-export const sevenDay: DayForecast[] = [
-  { date: addDays(0), condition: "partly-cloudy", high: 68, low: 54, precip: 20 },
-  { date: addDays(1), condition: "rain", high: 62, low: 52, precip: 85 },
-  { date: addDays(2), condition: "storm", high: 60, low: 51, precip: 95 },
-  { date: addDays(3), condition: "cloudy", high: 64, low: 53, precip: 35 },
-  { date: addDays(4), condition: "sunny", high: 71, low: 55, precip: 5 },
-  { date: addDays(5), condition: "sunny", high: 74, low: 57, precip: 5 },
-  { date: addDays(6), condition: "partly-cloudy", high: 70, low: 56, precip: 15 },
-];
+function hash(s: string) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return Math.abs(h);
+}
 
 function addDays(n: number) {
   const d = new Date();
   d.setDate(d.getDate() + n);
   return d.toISOString();
 }
+
+function baseTemp(lat: number) {
+  const absLat = Math.abs(lat);
+  // Warmer near equator, cooler toward poles.
+  return Math.round(88 - absLat * 0.85);
+}
+
+function pickCondition(h: number, i: number): Condition {
+  return CONDITIONS[(h + i) % CONDITIONS.length];
+}
+
+export function weatherFor(loc: Seed): CurrentWeather {
+  const h = hash(loc.name + loc.lat.toFixed(2));
+  const tempF = baseTemp(loc.lat) + ((h % 9) - 4);
+  const condition = pickCondition(h, 0);
+  return {
+    location: loc.name,
+    region: loc.region,
+    tempF,
+    feelsLikeF: tempF - ((h % 4) - 1),
+    condition,
+    conditionLabel: LABELS[condition],
+    high: tempF + 3 + (h % 4),
+    low: tempF - 6 - (h % 5),
+    humidity: 45 + (h % 45),
+    windMph: 4 + (h % 18),
+    windDir: DIRS[h % DIRS.length],
+    uv: 1 + (h % 10),
+    sunrise: `${5 + ((h >> 3) % 3)}:${String((h >> 5) % 60).padStart(2, "0")} AM`,
+    sunset: `${6 + ((h >> 7) % 3)}:${String((h >> 9) % 60).padStart(2, "0")} PM`,
+  };
+}
+
+export function hourlyFor(loc: Seed): HourlyPoint[] {
+  const h = hash(loc.name + "hourly");
+  const base = baseTemp(loc.lat);
+  const now = new Date();
+  return Array.from({ length: 24 }, (_, i) => {
+    const d = new Date(now.getTime() + i * 3600 * 1000);
+    const t = base - 5 + Math.round(7 * Math.sin((i + (h % 6)) / 3) + (i > 6 && i < 18 ? 6 : 0));
+    const cond = pickCondition(h, i);
+    return {
+      time: d.toISOString(),
+      tempF: t,
+      condition: cond,
+      precip: cond === "rain" || cond === "storm" ? 55 + ((h + i) % 40) : cond === "cloudy" ? 15 + (i % 10) : 5 + (i % 5),
+    };
+  });
+}
+
+export function sevenDayFor(loc: Seed): DayForecast[] {
+  const h = hash(loc.name + "week");
+  const base = baseTemp(loc.lat);
+  return Array.from({ length: 7 }, (_, i) => {
+    const cond = pickCondition(h, i * 2 + 1);
+    const high = base + 4 + ((h + i) % 6);
+    const low = base - 6 - ((h + i * 3) % 6);
+    return {
+      date: addDays(i),
+      condition: cond,
+      high,
+      low,
+      precip: cond === "rain" || cond === "storm" ? 70 + ((h + i) % 25) : cond === "cloudy" ? 25 + (i * 5) % 20 : 5 + (i * 3) % 10,
+    };
+  });
+}
+
+// Back-compat default exports (used by any not-yet-migrated component/mocks).
+const DEFAULT_SEED: Seed = { name: "Bengaluru", region: "Karnataka, India", lat: 12.97, lon: 77.59 };
+export const currentWeather: CurrentWeather = weatherFor(DEFAULT_SEED);
+export const hourly: HourlyPoint[] = hourlyFor(DEFAULT_SEED);
+export const sevenDay: DayForecast[] = sevenDayFor(DEFAULT_SEED);

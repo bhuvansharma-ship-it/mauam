@@ -1,7 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Bell, Bookmark, CloudSun, Map, Menu, MoonStar, Newspaper, Search, Settings, ShieldAlert, Sun, X } from "lucide-react";
+import { Bell, Bookmark, CloudSun, Map, Menu, MoonStar, Newspaper, Settings, ShieldAlert, Sun, X } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useTheme } from "./theme-provider";
+import { LocationSwitcher } from "./location-switcher";
 import { breakingNews } from "../lib/mock/news";
 import { cn } from "../lib/utils";
 
@@ -60,11 +61,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
-            <button className="hidden h-10 items-center gap-2 rounded-full border border-glass-border/70 bg-glass px-3 text-sm text-muted-foreground transition hover:text-foreground md:flex">
-              <Search className="h-4 w-4" />
-              <span>Search location or news…</span>
-              <kbd className="ml-4 rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">⌘K</kbd>
-            </button>
+            <LocationSwitcher />
             <button
               onClick={() => setTheme(resolved === "dark" ? "light" : "dark")}
               className="grid h-10 w-10 place-items-center rounded-full border border-glass-border/70 bg-glass transition hover:bg-accent/20"
