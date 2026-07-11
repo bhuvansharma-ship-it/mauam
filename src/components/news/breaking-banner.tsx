@@ -1,7 +1,7 @@
 import { timeAgo } from "../../lib/format-time";
 import type { Article } from "../../lib/mock/news";
 
-export function BreakingBanner({ items }: { items: NewsArticle[] }) {
+export function BreakingBanner({ items }: { items: Article[] }) {
   if (items.length === 0) return null;
   return (
     <div className="rounded-3xl border border-news-breaking/50 bg-news-breaking/5 p-1">
