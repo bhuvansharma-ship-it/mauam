@@ -38,16 +38,17 @@ export function HeroWeather() {
         </div>
 
         <div className="flex items-end gap-4">
-          <div className="font-display text-7xl font-bold tabular-nums leading-none sm:text-8xl">{w.tempF}°</div>
+          <div className="font-display text-7xl font-bold tabular-nums leading-none sm:text-8xl">{w.tempF}°C</div>
           <div className="pb-2">
             <div className="text-base font-medium">{w.conditionLabel}</div>
-            <div className="text-sm text-muted-foreground">Feels like {w.feelsLikeF}° · H {w.high}° · L {w.low}°</div>
+            <div className="text-sm text-muted-foreground">Feels like {w.feelsLikeF}°C · H {w.high}°C · L {w.low}°C</div>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Metric icon={<Droplets className="h-4 w-4" />} label="Humidity" value={`${w.humidity}%`} />
-          <Metric icon={<Wind className="h-4 w-4" />} label="Wind" value={`${w.windMph} mph ${w.windDir}`} />
+          <Metric icon={<Wind className="h-4 w-4" />} label="Wind" value={`${w.windMph} km/h ${w.windDir}`} />
+
           <Metric icon={<Eye className="h-4 w-4" />} label="UV Index" value={`${w.uv}`} />
           <Metric icon={<Sunrise className="h-4 w-4" />} label="Sunrise" value={w.sunrise} extra={<><Sunset className="h-3 w-3" />{w.sunset}</>} />
         </div>
