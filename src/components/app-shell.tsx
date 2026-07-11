@@ -113,7 +113,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 }
 
 function BreakingTicker() {
-  const items = breakingNews();
+  const { active } = useLocation();
+  const query = useQuery(newsQueryOptions({ location: active }));
+  const items = (query.data ?? []).filter((n) => n.severity === "breaking" || n.severity === "critical").slice(0, 8);
   if (!items.length) return null;
   return (
     <div className="overflow-hidden border-t border-glass-border/60 bg-gradient-to-r from-weather-critical/10 via-transparent to-weather-storm/10">
@@ -124,15 +126,16 @@ function BreakingTicker() {
         <div className="relative flex-1 overflow-hidden">
           <div className="flex whitespace-nowrap animate-ticker gap-10">
             {[...items, ...items].map((n, i) => (
-              <Link
+              <a
                 key={i}
-                to="/news/$slug"
-                params={{ slug: n.slug }}
+                href={n.url ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-sm font-medium hover:underline"
               >
                 <span className="mr-2 text-muted-foreground">{n.source.name} ·</span>
                 {n.headline}
-              </Link>
+              </a>
             ))}
           </div>
         </div>
