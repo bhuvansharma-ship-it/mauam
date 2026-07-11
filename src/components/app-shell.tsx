@@ -26,6 +26,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { resolved, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-dvh">
@@ -55,7 +56,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </Link>
 
           <nav className="ml-6 hidden items-center gap-1 lg:flex" aria-label="Primary">
-            {NAV.map(({ to, label, icon: Icon }) => {
+            {NAV.map(({ to, key, icon: Icon }) => {
               const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
               return (
                 <Link
@@ -70,7 +71,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   )}
                 >
                   <Icon className="h-4 w-4" aria-hidden="true" />
-                  {label}
+                  {t(`nav.${key}`)}
                 </Link>
               );
             })}
