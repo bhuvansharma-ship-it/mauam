@@ -1,6 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Bell, Bookmark, CloudSun, ListChecks, LogOut, Menu, MoonStar, Navigation, Newspaper, Settings, ShieldAlert, Sun, User, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "./theme-provider";
 import { LocationSwitcher } from "./location-switcher";
 import { useLocation } from "../lib/locations";
@@ -11,13 +12,13 @@ import { cn } from "../lib/utils";
 
 
 const NAV = [
-  { to: "/", label: "Dashboard", icon: CloudSun },
-  { to: "/news", label: "News", icon: Newspaper },
-  { to: "/alerts", label: "Alerts", icon: ShieldAlert },
-  { to: "/travel", label: "Travel", icon: Navigation },
-  { to: "/checklist", label: "Checklist", icon: ListChecks },
-  { to: "/bookmarks", label: "Saved", icon: Bookmark },
-  { to: "/settings", label: "Settings", icon: Settings },
+  { to: "/", key: "dashboard", icon: CloudSun },
+  { to: "/news", key: "news", icon: Newspaper },
+  { to: "/alerts", key: "alerts", icon: ShieldAlert },
+  { to: "/travel", key: "travel", icon: Navigation },
+  { to: "/checklist", key: "checklist", icon: ListChecks },
+  { to: "/bookmarks", key: "saved", icon: Bookmark },
+  { to: "/settings", key: "settings", icon: Settings },
 ] as const;
 
 
